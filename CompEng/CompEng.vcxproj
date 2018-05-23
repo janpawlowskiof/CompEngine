@@ -150,17 +150,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="baseObject.h" />
+    <ClInclude Include="camera.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="master.h" />
     <ClInclude Include="rendererComponent.h" />
     <ClInclude Include="rendererMaster.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="shaderSources.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="transformComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="baseObject.cpp" />
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="CompEng.cpp" />
     <ClCompile Include="component.cpp" />
     <ClCompile Include="glad.c">
@@ -175,6 +179,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="transformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\basicShader.fs" />
