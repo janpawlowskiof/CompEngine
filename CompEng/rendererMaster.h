@@ -13,6 +13,10 @@
 #include <glm\glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <vector>
+#include "baseObject.h"
+#include "rendererComponent.h"
+#include "transformComponent.h"
 
 class RendererMaster : public Master
 {
@@ -21,12 +25,6 @@ private:
 	Shader* shader;
 	GLFWwindow* window;
 	Camera* camera;
-
-	/*TESTING TEMP VARIABLES*/
-
-	unsigned int VBO;	//These all will belong to rendererComponent
-	unsigned int VAO;
-	unsigned int texture;
 
 	//Matrix - Camera Stuff
 	glm::mat4 modelMatrix;	//Model

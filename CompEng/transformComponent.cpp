@@ -5,14 +5,8 @@ glm::mat4 TransformComponent::GetModelMatrix()	//Get matrix that we use in shade
 {
 	glm::mat4 trans;
 	trans = glm::translate(trans, position);
-	trans *= scale;
 	return trans;
 }
-
-TransformComponent::TransformComponent()
-{
-}
-
 
 TransformComponent::~TransformComponent()
 {

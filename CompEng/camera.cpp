@@ -16,7 +16,6 @@ void Camera::Update(GLFWwindow* window)
 	Rotate(-(mouseY - oldMouseY) * sensitivity, (mouseX - oldMouseX) * sensitivity);
 	oldMouseX = mouseX;
 	oldMouseY = mouseY;
-	std::cout << yaw << std::endl;
 }
 
 glm::mat4 Camera::GetViewMatrix()
