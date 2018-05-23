@@ -7,6 +7,8 @@
 
 #include "master.h"
 #include "shaderSources.h"
+#include "camera.h"
+#include <iostream>
 #include "shader.h"
 #include <glm\glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -18,7 +20,7 @@ private:
 
 	Shader* shader;
 	GLFWwindow* window;
-
+	Camera* camera;
 
 	/*TESTING TEMP VARIABLES*/
 

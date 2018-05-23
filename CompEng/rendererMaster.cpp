@@ -11,6 +11,11 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
+void mouseCallback()
+{
+
+}
+
 void RendererMaster::Initialize()
 {
 	//Initializing OpenGL
@@ -35,6 +40,9 @@ void RendererMaster::Initialize()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		system("pause");
 	}
+
+	//Enabling OpenGl Features
+	glEnable(GL_DEPTH_TEST);
 
 	shader = new Shader("res/basicShader.vs", "res/basicShader.fs");	//Create Basic Shader
 	shader->use();
@@ -89,6 +97,11 @@ void RendererMaster::Initialize()
 	glEnableVertexAttribArray(2);
 
 	//Camera Configuration
+	camera = new Camera(glm::vec3(0.0f, 0.0f, 4.0f));
+	camera->Initialize(window);
+	//camera->LookAt(glm::vec3(0, 0, 0));
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	modelMatrixLoc = glGetUniformLocation(shader->ID, "modelMatrix");
 	viewMatrixLoc = glGetUniformLocation(shader->ID, "viewMatrix");
 	projectionMatrixLoc = glGetUniformLocation(shader->ID, "projectionMatrix");
@@ -96,26 +109,30 @@ void RendererMaster::Initialize()
 	projectionMatrix = glm::perspective(glm::radians(60.0f), (float)width / (float)height, 0.1f, 100.0f);
 	glUniformMatrix4fv(projectionMatrixLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
-	viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, 0.0f, -3.0f));
-	glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+	//viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, 0.0f, -2.0f));
+	//glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 }
 
 void RendererMaster::Update()
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	//Very Temporary
 	shader->use();
 	glBindVertexArray(VAO);
 	glBindTexture(GL_TEXTURE_2D, texture);
-
-	//Matrix testing stuff
-	modelMatrix = glm::rotate(modelMatrix, glm::radians(3.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	//Camera Control
+	camera->Update(window);
+	//camera->position.x = 2.0f*sin(glfwGetTime());
+	viewMatrix = camera->GetViewMatrix();
+	glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 	//
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	glfwSwapBuffers(window);
 	glfwPollEvents();
