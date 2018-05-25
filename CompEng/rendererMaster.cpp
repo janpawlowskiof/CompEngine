@@ -6,7 +6,6 @@
 
 extern std::vector<BaseObject*> baseObjectCollection;
 
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -75,15 +74,11 @@ void RendererMaster::Update()
 
 	//Very Temporary
 	shader->use();
-	//glBindVertexArray(VAO);
-	//glBindTexture(GL_TEXTURE_2D, texture);
-	//glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
 
 	//Camera Control
 	camera->Update(window);
 	viewMatrix = camera->GetViewMatrix();
 	glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-
 	//
 
 	for (BaseObject* baseObject : baseObjectCollection)
@@ -97,7 +92,7 @@ void RendererMaster::Update()
 
 			modelMatrix = transform->GetModelMatrix();
 			glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
-			renderer->Draw();
+			renderer->Draw(shader);
 		}
 	}
 

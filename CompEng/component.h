@@ -2,19 +2,21 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
+
+class BaseObject;
 
 class Component
 {
 private:
-	//Component* baseObject;
-	//Master* master;
 
 public:
+	BaseObject* baseObject;
 	virtual std::string type() { return "null"; }
-	virtual void Initialize() { };
+	virtual void Initialize() {  }
 	virtual void Update()
 	{
-		std::cout << "Updating " << type() << std::endl;
+		std::cout << "Updating default" << type() << std::endl;
 	}
 	Component();
 	virtual ~Component();
