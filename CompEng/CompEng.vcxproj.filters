@@ -51,6 +51,9 @@
     <ClInclude Include="camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -85,5 +88,7 @@
   <ItemGroup>
     <None Include="res\basicShader.fs" />
     <None Include="res\basicShader.vs" />
+    <None Include="res\lightingShader.fs" />
+    <None Include="res\lightingShader.vs" />
   </ItemGroup>
 </Project>

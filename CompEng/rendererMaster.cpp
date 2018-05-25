@@ -39,22 +39,24 @@ void RendererMaster::Initialize()
 	//Enabling OpenGl Features
 	glEnable(GL_DEPTH_TEST);
 
-	shader = new Shader("res/basicShader.vs", "res/basicShader.fs");	//Create Basic Shader
-	shader->use();
+	basicShader = new Shader("res/basicShader.vs", "res/basicShader.fs");	//Create Basic Shader
+	basicShader->use();
+	basicShader->setVec3("lightColor", 1,1,1);
+
+	lightingShader = new Shader("res/lightingShader.vs", "res/lightingShader.fs");	//Create Basic Shader
+	lightingShader->use();
+
+	lightingShader->setInt("diffuseMap", 0);
+	lightingShader->setVec3("lightPos", 0, 0, 0);
 
 	//Temporary Camera Configuration
 	camera = new Camera(glm::vec3(0.0f, 0.0f, 4.0f));
 	camera->Initialize(window);
-	//camera->LookAt(glm::vec3(0, 0, 0));
+	//
+
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	modelMatrixLoc = glGetUniformLocation(shader->ID, "modelMatrix");
-	viewMatrixLoc = glGetUniformLocation(shader->ID, "viewMatrix");
-	projectionMatrixLoc = glGetUniformLocation(shader->ID, "projectionMatrix");
-
 	projectionMatrix = glm::perspective(glm::radians(60.0f), 800.0f/600.0f, 0.1f, 100.0f);
-	glUniformMatrix4fv(projectionMatrixLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-
 
 	for (BaseObject* baseObject : baseObjectCollection)
 	{
@@ -72,15 +74,13 @@ void RendererMaster::Update()
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	//Very Temporary
-	shader->use();
 
 	//Camera Control
 	camera->Update(window);
 	viewMatrix = camera->GetViewMatrix();
-	glUniformMatrix4fv(viewMatrixLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 	//
 
+	currentShader = basicShader;
 	for (BaseObject* baseObject : baseObjectCollection)
 	{
 		RendererComponent* renderer = (RendererComponent*)(baseObject->GetComponent("Renderer"));
@@ -91,8 +91,23 @@ void RendererMaster::Update()
 				std::cout << "null!!" << std::endl;
 
 			modelMatrix = transform->GetModelMatrix();
-			glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
-			renderer->Draw(shader);
+
+			currentShader->use();
+			currentShader->setMat4("projectionMatrix", projectionMatrix);
+			currentShader->setMat4("viewMatrix", viewMatrix);
+			currentShader->setMat4("modelMatrix", modelMatrix);
+			currentShader->setVec3("cameraPos", camera->position);
+			
+			//temporar light setup
+			glm::vec3 lightColor = glm::vec3(1, 1, 1);
+			currentShader->setVec3("light.ambient", lightColor * 0.2f);
+			currentShader->setVec3("light.diffuse", lightColor * 0.65f);
+			currentShader->setVec3("light.specular", 1, 1, 1);
+
+
+			renderer->Draw(currentShader);
+
+			currentShader = lightingShader;
 		}
 	}
 

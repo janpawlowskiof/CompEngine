@@ -22,7 +22,11 @@ class RendererMaster : public Master
 {
 private:
 
-	Shader* shader;
+	Shader* basicShader;
+	Shader* lightingShader;
+
+	Shader* currentShader;
+
 	GLFWwindow* window;
 	Camera* camera;
 
@@ -31,9 +35,9 @@ private:
 	glm::mat4 viewMatrix;	//View
 	glm::mat4 projectionMatrix; //Projection
 
-	unsigned int modelMatrixLoc;	//Locations
-	unsigned int viewMatrixLoc;
-	unsigned int projectionMatrixLoc;
+	//unsigned int modelMatrixLoc;	//Locations
+	//unsigned int viewMatrixLoc;
+	//unsigned int projectionMatrixLoc;
 
 	/*END TESTING TEMP VARIABLES*/
 

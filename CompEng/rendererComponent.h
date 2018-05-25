@@ -2,6 +2,7 @@
 
 #include "component.h"
 #include "shader.h"
+#include "Material.h"
 
 class RendererComponent : public Component
 {
@@ -11,13 +12,13 @@ public:
 	unsigned int VBO;
 	unsigned int VAO;
 	unsigned int texture;
+	Material material;
 	
 	std::string type() { return "Renderer"; }
 	void Initialize();
 	void Draw(Shader*);
 
-	bool useTexture = true;
-	//glm::vec3 color = glm::vec3(0.2, 0.1, 0.85);
+	bool useTexture = false;
 	//void Draw();
 	//RendererComponent() {};
 	//~RendererComponent();

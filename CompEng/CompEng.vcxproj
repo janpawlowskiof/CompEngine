@@ -153,6 +153,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="master.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="rendererComponent.h" />
     <ClInclude Include="rendererMaster.h" />
     <ClInclude Include="Shader.h" />
@@ -184,6 +185,8 @@
   <ItemGroup>
     <None Include="res\basicShader.fs" />
     <None Include="res\basicShader.vs" />
+    <None Include="res\lightingShader.fs" />
+    <None Include="res\lightingShader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
