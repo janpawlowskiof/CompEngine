@@ -7,11 +7,12 @@
 class RendererComponent : public Component
 {
 private:
-
+	unsigned int loadTexture(char const * path);
 public:
 	unsigned int VBO;
 	unsigned int VAO;
-	unsigned int texture;
+	unsigned int diffuseMap;
+	unsigned int specularMap;
 	Material material;
 	
 	std::string type() { return "Renderer"; }

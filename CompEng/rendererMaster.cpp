@@ -46,8 +46,8 @@ void RendererMaster::Initialize()
 	lightingShader = new Shader("res/lightingShader.vs", "res/lightingShader.fs");	//Create Basic Shader
 	lightingShader->use();
 
-	lightingShader->setInt("diffuseMap", 0);
-	lightingShader->setVec3("lightPos", 0, 0, 0);
+	lightingShader->setInt("material.diffuseMap", 0);
+	lightingShader->setInt("material.specularMap", 1);
 
 	//Temporary Camera Configuration
 	camera = new Camera(glm::vec3(0.0f, 0.0f, 4.0f));
@@ -80,7 +80,43 @@ void RendererMaster::Update()
 	viewMatrix = camera->GetViewMatrix();
 	//
 
-	currentShader = basicShader;
+	currentShader = lightingShader;
+
+	//Setting up Lights
+	int activePointLights = 0;
+	for (BaseObject* baseObject : baseObjectCollection)
+	{
+		LightComponent* light = (LightComponent*)(baseObject->GetComponent("Light"));
+		if (light == NULL)
+			continue;
+
+		switch (light->lightType)
+		{
+		case LIGHT_DIRECTIONAL:
+			currentShader->setVec3("directionalLight.direction", light->direction);
+			currentShader->setVec3("directionalLight.ambient", light->ambient);
+			currentShader->setVec3("directionalLight.diffuse", light->diffuse);
+			currentShader->setVec3("directionalLight.specular", light->specular);
+			break;
+		case LIGHT_POINT:
+			TransformComponent * transform = (TransformComponent*)(baseObject->GetComponent("Transform"));
+			if (transform == NULL)
+				std::cout << "POINT LIGHT MUST HVE A TRANSFORM COMPONENT" << std::endl;
+			currentShader->setVec3(std::string("pointLights[") + std::to_string(activePointLights) + std::string("].position"), transform->position);
+			currentShader->setVec3(std::string("pointLights[") + std::to_string(activePointLights) + std::string("].ambient"), light->ambient);
+			currentShader->setVec3(std::string("pointLights[") + std::to_string(activePointLights) + std::string("].diffuse"), light->diffuse);
+			currentShader->setVec3(std::string("pointLights[") + std::to_string(activePointLights) + std::string("].specular"), light->specular);
+			currentShader->setFloat(std::string("pointLights[") + std::to_string(activePointLights) + std::string("].constant"), light->constant);
+			currentShader->setFloat(std::string("pointLights[") + std::to_string(activePointLights) + std::string("].linear"), light->linear);
+			currentShader->setFloat(std::string("pointLights[") + std::to_string(activePointLights) + std::string("].quadratic"), light->quadratic);
+
+			activePointLights++;
+			break;
+		}
+	}
+	currentShader->setInt("activePointLights", activePointLights);
+
+	//Actual drawing
 	for (BaseObject* baseObject : baseObjectCollection)
 	{
 		RendererComponent* renderer = (RendererComponent*)(baseObject->GetComponent("Renderer"));
@@ -88,8 +124,9 @@ void RendererMaster::Update()
 		{
 			TransformComponent* transform = (TransformComponent*)(baseObject->GetComponent("Transform"));
 			if (transform == NULL)
-				std::cout << "null!!" << std::endl;
+				std::cout << "null transform!!" << std::endl;
 
+			//transform->angle += 0.03f;
 			modelMatrix = transform->GetModelMatrix();
 
 			currentShader->use();
@@ -99,15 +136,11 @@ void RendererMaster::Update()
 			currentShader->setVec3("cameraPos", camera->position);
 			
 			//temporar light setup
-			glm::vec3 lightColor = glm::vec3(1, 1, 1);
-			currentShader->setVec3("light.ambient", lightColor * 0.2f);
-			currentShader->setVec3("light.diffuse", lightColor * 0.65f);
-			currentShader->setVec3("light.specular", 1, 1, 1);
-
+			//glm::vec3 lightColor = glm::vec3(1, 1, 1);
 
 			renderer->Draw(currentShader);
 
-			currentShader = lightingShader;
+			//currentShader = lightingShader;
 		}
 	}
 

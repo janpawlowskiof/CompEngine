@@ -17,6 +17,7 @@ public:
 	glm::mat4 GetModelMatrix();	//method to get matrix that we use later on in shader
 	float scale = 1.0f;	//scalar
 
+	float angle = 0.0f;
 	std::string type() { return "Transform"; }
 	TransformComponent(glm::vec3 pos) { position = pos; };
 	~TransformComponent();

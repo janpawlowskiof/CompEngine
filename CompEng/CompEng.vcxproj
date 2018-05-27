@@ -152,6 +152,7 @@
     <ClInclude Include="baseObject.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="component.h" />
+    <ClInclude Include="lightComponent.h" />
     <ClInclude Include="master.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="rendererComponent.h" />

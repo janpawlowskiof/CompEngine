@@ -9,6 +9,7 @@
 #include "shaderSources.h"
 #include "camera.h"
 #include <iostream>
+#include <string>
 #include "shader.h"
 #include <glm\glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -17,6 +18,7 @@
 #include "baseObject.h"
 #include "rendererComponent.h"
 #include "transformComponent.h"
+#include "lightComponent.h"
 
 class RendererMaster : public Master
 {
