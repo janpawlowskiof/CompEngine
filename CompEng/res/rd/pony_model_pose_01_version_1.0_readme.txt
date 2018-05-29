@@ -1,0 +1,55 @@
+
+
+My Little Pony: Friendship is Magic is © Hasbro
+I do not own the intellectual properties this model is based on.
+
+
+
+Pony Model Download Center:
+http://kp-shadowsquirrel.deviantart.com/#/d3k5wig
+
+
+
+The textures for this model are contained within the "pose 0" pack that is available in the Pony Model Download Center.
+Only textures that were changed for this pose are contained in this pack.
+
+
+
+
+-----------------------------
+
+
+
+FAQ  
+
+
+
+
+
+Q: the TEXTURES were applied to the model in [insert your 3d application] but appear not to fit right on i.e. they are all over the mesh with some black patches.
+
+A: depending on your software it may be necessary to flip the textures horizontally.
+
+
+
+
+Q: the placement of the TEETH and TONGUE meshes could be better.
+
+A: that is correct. placing these in a closed mouth is a little difficult. 
+   if you think they should be moved/scaled or reshaped to improove a desired facial expression just do it.
+
+
+
+
+Q: When smoothing the model (before or during the rendering ) the TEXTURES become jagged and small black spots appear in some places.
+
+A: This is caused when the uv's get smoothed with the mesh. just disable the uv smoothing in the appropriate options.
+
+
+
+
+Q: When smoothing the model (before or during the rendering ) the TEXTURES become jagged and small black spots appear in some places.
+
+A: This is caused when the uv's get smoothed with the mesh. just disable the uv smoothing in the appropriate options. 
+
+

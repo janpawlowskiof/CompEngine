@@ -158,6 +158,7 @@
     <ClInclude Include="meshComponent.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="modelMaster.h" />
+    <ClInclude Include="myTestScipt.h" />
     <ClInclude Include="rendererComponent.h" />
     <ClInclude Include="rendererMaster.h" />
     <ClInclude Include="Shader.h" />
@@ -166,6 +167,8 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="transformComponent.h" />
+    <ClInclude Include="userScriptComponent.h" />
+    <ClInclude Include="userScriptMaster.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="baseObject.cpp" />
@@ -188,6 +191,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="transformComponent.cpp" />
+    <ClCompile Include="userScriptComponent.cpp" />
+    <ClCompile Include="userScriptMaster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\basicShader.fs" />

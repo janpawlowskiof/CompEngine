@@ -32,10 +32,21 @@ MeshComponent::MeshComponent(std::vector<Vertex> &vertices, std::vector<unsigned
 	glBindVertexArray(0);
 }
 
+void MeshComponent::Initialize()
+{
+}
+
 void MeshComponent::Draw(Shader* shader)
 {
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
+
+	for (int i = 0; i < 16; ++i)
+	{
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
 	for (unsigned int i = 0; i < textures.size(); i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding

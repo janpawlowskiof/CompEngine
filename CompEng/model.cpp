@@ -27,8 +27,6 @@ void Model::loadModel(std::string path)
 	directory = path.substr(0, path.find_last_of('/'));
 
 	processNode(scene->mRootNode, scene);
-
-	//std::cout << "Mesh Count = " << meshes.size() << std::endl;
 }
 
 void Model::processNode(aiNode *node, const aiScene *scene)
@@ -98,6 +96,10 @@ MeshComponent Model::processMesh(aiMesh *mesh, const aiScene *scene)
 	}
 	MeshComponent m = MeshComponent(vertices, indices, textures);
 	m.name = mesh->mName.C_Str();
+
+	std::cout << "Mesh Name = " << m.name << std::endl;
+
+
 	return m;
 }
 
@@ -108,6 +110,8 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
 	{
 		aiString str;
 		mat->GetTexture(type, i, &str);
+		std::cout << str.C_Str() << std::endl;
+
 		bool skip = false;
 		for (unsigned int j = 0; j < textures_loaded.size(); j++)
 		{

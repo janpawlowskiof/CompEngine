@@ -36,6 +36,7 @@ public:
 	unsigned int VBO, VAO, EBO;
 
 	MeshComponent(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, std::vector<Texture> &textures);
+	void Initialize();
 	void Draw(Shader* shader);
 
 	//MeshComponentComponent();
