@@ -11,13 +11,13 @@
 #include "baseObject.h"
 #include "transformComponent.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+//#define STB_IMAGE_IMPLEMENTATION
+//#include "stb_image.h"
 
 
 void RendererComponent::Initialize()
 {
-	float vertices[] = {
+	/*float vertices[] = {
 		// positions          // normals           // diffuseMap coords
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
 		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
@@ -81,7 +81,7 @@ void RendererComponent::Initialize()
 	glEnableVertexAttribArray(1);
 	//Texture Attributes
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(2);*/
 
 }
 
@@ -101,7 +101,7 @@ void RendererComponent::Draw(Shader* shader)
 
 unsigned int RendererComponent::loadTexture(char const * path)
 {
-	unsigned int textureID;
+	/*unsigned int textureID;
 	glGenTextures(1, &textureID);
 
 	int width, height, nrComponents;
@@ -133,5 +133,6 @@ unsigned int RendererComponent::loadTexture(char const * path)
 		stbi_image_free(data);
 	}
 
-	return textureID;
+	return textureID;*/
+	return NULL;
 }

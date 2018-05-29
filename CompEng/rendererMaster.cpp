@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "rendererMaster.h"
 
+#include "model.h"
+#include <filesystem>
+
 #define WIDTH 800
 #define HEIGHT 600
 
@@ -10,6 +13,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
+
+Model* ourModel;
 
 void RendererMaster::Initialize()
 {
@@ -41,13 +46,12 @@ void RendererMaster::Initialize()
 
 	basicShader = new Shader("res/basicShader.vs", "res/basicShader.fs");	//Create Basic Shader
 	basicShader->use();
-	basicShader->setVec3("lightColor", 1,1,1);
+	//currentShader = basicShader;
+	//basicShader->setVec3("lightColor", 1,1,1);
 
 	lightingShader = new Shader("res/lightingShader.vs", "res/lightingShader.fs");	//Create Basic Shader
 	lightingShader->use();
-
-	lightingShader->setInt("material.diffuseMap", 0);
-	lightingShader->setInt("material.specularMap", 1);
+	currentShader = lightingShader;
 
 	//Temporary Camera Configuration
 	camera = new Camera(glm::vec3(0.0f, 0.0f, 4.0f));
@@ -63,9 +67,12 @@ void RendererMaster::Initialize()
 		RendererComponent* renderer = (RendererComponent*)(baseObject->GetComponent("Renderer"));
 		if (renderer != NULL)
 		{
-			renderer->Initialize();
+		//	renderer->Initialize();
 		}
 	}
+
+	//ourModel = new Model("D:/Projekty2/VS/CompEng/CompEng/res/nanosuit/nanosuit.obj");;
+	//ourModel = new Model("D:/Projekty2/VS/CompEng/CompEng/res/car/car.obj");;
 }   
 
 void RendererMaster::Update()
@@ -80,7 +87,7 @@ void RendererMaster::Update()
 	viewMatrix = camera->GetViewMatrix();
 	//
 
-	currentShader = lightingShader;
+	//currentShader = lightingShader;
 
 	//Setting up Lights
 	int activePointLights = 0;
@@ -115,12 +122,12 @@ void RendererMaster::Update()
 		}
 	}
 	currentShader->setInt("activePointLights", activePointLights);
-
+	
 	//Actual drawing
 	for (BaseObject* baseObject : baseObjectCollection)
 	{
-		RendererComponent* renderer = (RendererComponent*)(baseObject->GetComponent("Renderer"));
-		if (renderer != NULL)
+		Model* model = (Model*)(baseObject->GetComponent("Model"));
+		if (model != NULL)
 		{
 			TransformComponent* transform = (TransformComponent*)(baseObject->GetComponent("Transform"));
 			if (transform == NULL)
@@ -138,12 +145,23 @@ void RendererMaster::Update()
 			//temporar light setup
 			//glm::vec3 lightColor = glm::vec3(1, 1, 1);
 
-			renderer->Draw(currentShader);
+			model->Draw(currentShader);
+			//renderer->Draw(currentShader);
 
 			//currentShader = lightingShader;
 		}
 	}
 
+	/*currentShader->use();
+	modelMatrix = glm::mat4();
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f));
+	currentShader->setMat4("projectionMatrix", projectionMatrix);
+	currentShader->setMat4("viewMatrix", viewMatrix);
+	currentShader->setMat4("modelMatrix", modelMatrix);
+	currentShader->setVec3("cameraPos", camera->position);
+	currentShader->setFloat("material.shininess", 32.0f);*/
+
+	//ourModel->Draw(*currentShader);
 
 	glfwSwapBuffers(window);
 	glfwPollEvents();

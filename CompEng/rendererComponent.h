@@ -20,8 +20,5 @@ public:
 	void Draw(Shader*);
 
 	bool useTexture = false;
-	//void Draw();
-	//RendererComponent() {};
-	//~RendererComponent();
 };
 

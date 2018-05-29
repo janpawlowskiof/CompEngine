@@ -97,7 +97,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -155,6 +155,9 @@
     <ClInclude Include="lightComponent.h" />
     <ClInclude Include="master.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="meshComponent.h" />
+    <ClInclude Include="model.h" />
+    <ClInclude Include="modelMaster.h" />
     <ClInclude Include="rendererComponent.h" />
     <ClInclude Include="rendererMaster.h" />
     <ClInclude Include="Shader.h" />
@@ -173,6 +176,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="master.cpp" />
+    <ClCompile Include="meshComponent.cpp" />
+    <ClCompile Include="model.cpp" />
+    <ClCompile Include="modelMaster.cpp" />
     <ClCompile Include="rendererComponent.cpp" />
     <ClCompile Include="rendererMaster.cpp" />
     <ClCompile Include="stdafx.cpp">
