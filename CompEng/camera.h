@@ -28,7 +28,7 @@ public:
 	void Initialize(GLFWwindow*);
 
 	float speed = 0.05f;
-	float sensitivity = 0.4f;
+	float sensitivity = 0.2f;
 	double oldMouseX = 0, oldMouseY = 0;
 
 	Camera(glm::vec3 position);

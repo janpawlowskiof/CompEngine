@@ -17,8 +17,8 @@ public:
 	{
 		value += 0.03f;
 
-		BaseObject* light = BaseObject::Find("Car");
+		BaseObject* light = BaseObject::Find("Sphere");
 		TransformComponent* transform = (TransformComponent*)light->GetComponent("Transform");
-		transform->position = glm::vec3(0, sin(value), 0);
+		transform->position = glm::vec3(0, 0.6 + 0.5*sin(value), 0);
 	}
 };

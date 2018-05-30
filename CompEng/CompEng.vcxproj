@@ -200,6 +200,11 @@
     <None Include="res\lightingShader.fs" />
     <None Include="res\lightingShader.vs" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\crate.png" />
+    <Image Include="res\crate_spec.png" />
+    <Image Include="res\wall.jpg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

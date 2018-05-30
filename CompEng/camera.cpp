@@ -5,9 +5,12 @@ void Camera::Update(GLFWwindow* window)
 {
 	float vertical = ((glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) ? 1 : 0) + ((glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) ? -1 : 0);
 	float horizontal = ((glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) ? 1 : 0) + ((glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) ? -1 : 0);
-	if (horizontal != 0 || vertical != 0)
+
+	float verticalY = ((glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) ? 1 : 0) + ((glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) ? -1 : 0);
+
+	if (horizontal != 0 || vertical != 0 || verticalY != 0)
 	{
-		glm::vec3 dir = glm::normalize(glm::vec3(-horizontal, 0, vertical));
+		glm::vec3 dir = glm::normalize(glm::vec3(-horizontal, verticalY, vertical));
 		Move(dir * speed);
 	}
 	

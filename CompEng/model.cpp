@@ -95,9 +95,9 @@ MeshComponent Model::processMesh(aiMesh *mesh, const aiScene *scene)
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 	}
 	MeshComponent m = MeshComponent(vertices, indices, textures);
-	m.name = mesh->mName.C_Str();
+	//m.name = mesh->mName.C_Str();
 
-	std::cout << "Mesh Name = " << m.name << std::endl;
+	//std::cout << "Mesh Name = " << m.name << std::endl;
 
 
 	return m;

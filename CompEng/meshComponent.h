@@ -9,6 +9,10 @@
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 struct Vertex 
 {
 	glm::vec3 position;
@@ -31,15 +35,23 @@ public:
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
-	std::string name = "null";
 
 	unsigned int VBO, VAO, EBO;
 
 	MeshComponent(std::vector<Vertex> &vertices, std::vector<unsigned int> &indices, std::vector<Texture> &textures);
+	MeshComponent(std::string path);
+
 	void Initialize();
 	void Draw(Shader* shader);
 
-	//MeshComponentComponent();
 	~MeshComponent();
+	//MeshComponentComponent();
+	glm::vec3 diffuseColor = glm::vec3(1, 1, 0.6);
+	glm::vec3 specularColor = glm::vec3(1, 1, 0.6);
+
+	bool useTexture;
+	std::string type() { return "Mesh"; }
+private:
+	bool initialized = false;
 };
 

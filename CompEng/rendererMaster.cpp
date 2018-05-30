@@ -60,7 +60,7 @@ void RendererMaster::Initialize()
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	projectionMatrix = glm::perspective(glm::radians(60.0f), 800.0f/600.0f, 0.1f, 100.0f);
+	projectionMatrix = glm::perspective(glm::radians(60.0f), (float)WIDTH/HEIGHT, 0.1f, 100.0f);
 
 	for (BaseObject* baseObject : baseObjectCollection)
 	{
@@ -126,7 +126,7 @@ void RendererMaster::Update()
 	//Actual drawing
 	for (BaseObject* baseObject : baseObjectCollection)
 	{
-		Model* model = (Model*)(baseObject->GetComponent("Model"));
+		MeshComponent* model = (MeshComponent*)(baseObject->GetComponent("Mesh"));
 		if (model != NULL)
 		{
 			TransformComponent* transform = (TransformComponent*)(baseObject->GetComponent("Transform"));

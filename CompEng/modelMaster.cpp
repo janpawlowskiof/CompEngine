@@ -7,10 +7,10 @@ void ModelMaster::Initialize()
 {
 	for (BaseObject* baseObject : baseObjectCollection)
 	{
-		Model* model = (Model*)(baseObject->GetComponent("Model"));
-		if (model != NULL)
+		MeshComponent* mesh = (MeshComponent*)(baseObject->GetComponent("Mesh"));
+		if (mesh != NULL)
 		{
-			model->Initialize();
+			mesh->Initialize();
 		}
 	}
 }
