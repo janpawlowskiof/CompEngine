@@ -43,6 +43,8 @@ void RendererMaster::Initialize()
 
 	//Enabling OpenGl Features
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
 	basicShader = new Shader("res/basicShader.vs", "res/basicShader.fs");	//Create Basic Shader
 	basicShader->use();
@@ -81,6 +83,7 @@ void RendererMaster::Update()
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
+	closeProgramFlag = glfwWindowShouldClose(window);
 
 	//Camera Control
 	camera->Update(window);
@@ -133,7 +136,6 @@ void RendererMaster::Update()
 			if (transform == NULL)
 				std::cout << "null transform!!" << std::endl;
 
-			//transform->angle += 0.03f;
 			modelMatrix = transform->GetModelMatrix();
 
 			currentShader->use();
@@ -142,26 +144,12 @@ void RendererMaster::Update()
 			currentShader->setMat4("modelMatrix", modelMatrix);
 			currentShader->setVec3("cameraPos", camera->position);
 			
-			//temporar light setup
-			//glm::vec3 lightColor = glm::vec3(1, 1, 1);
-
 			model->Draw(currentShader);
-			//renderer->Draw(currentShader);
-
-			//currentShader = lightingShader;
 		}
 	}
 
-	/*currentShader->use();
-	modelMatrix = glm::mat4();
-	modelMatrix = glm::scale(modelMatrix, glm::vec3(0.5f));
-	currentShader->setMat4("projectionMatrix", projectionMatrix);
-	currentShader->setMat4("viewMatrix", viewMatrix);
-	currentShader->setMat4("modelMatrix", modelMatrix);
-	currentShader->setVec3("cameraPos", camera->position);
-	currentShader->setFloat("material.shininess", 32.0f);*/
-
-	//ourModel->Draw(*currentShader);
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE))
+		closeProgramFlag = true;
 
 	glfwSwapBuffers(window);
 	glfwPollEvents();
@@ -174,7 +162,8 @@ RendererMaster::RendererMaster()
 
 RendererMaster::~RendererMaster()
 {
-	//glDeleteVertexArrays(1, &VAO);
-	//glDeleteBuffers(1, &VBO);
+	//std::cout << "Renderer Master Destructor" << std::endl;
+	glDeleteShader(basicShader->ID);
+	glDeleteShader(lightingShader->ID);
 	glfwTerminate();
 }

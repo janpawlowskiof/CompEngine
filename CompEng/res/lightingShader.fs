@@ -103,5 +103,5 @@ void main()
 		result+=CalculatePointLight(pointLights[i], viewDir);
 
 	FragColor = vec4(result, 1.0);
-	//FragColor = texture(material.texture_diffuse1, TexCoords);
+	//   FragColor = vec4(vec3(FragPos.z),1.0);
 }

@@ -44,13 +44,13 @@ public:
 	void Initialize();
 	void Draw(Shader* shader);
 
-	~MeshComponent();
-	//MeshComponentComponent();
 	glm::vec3 diffuseColor = glm::vec3(1, 1, 0.6);
 	glm::vec3 specularColor = glm::vec3(1, 1, 0.6);
 
 	bool useTexture;
 	std::string type() { return "Mesh"; }
+
+	~MeshComponent();
 private:
 	bool initialized = false;
 };

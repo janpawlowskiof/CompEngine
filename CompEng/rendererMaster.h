@@ -44,6 +44,8 @@ private:
 	/*END TESTING TEMP VARIABLES*/
 
 public:
+	bool closeProgramFlag;
+
 	RendererMaster();
 	~RendererMaster();
 

@@ -10,7 +10,7 @@ private:
 
 public:
 	Master();
-	~Master();
+	virtual ~Master();
 
 
 	virtual void Initialize();

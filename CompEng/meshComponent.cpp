@@ -122,4 +122,6 @@ void MeshComponent::Draw(Shader* shader)
 
 MeshComponent::~MeshComponent()
 {
+	for (Texture texture : textures)
+		glDeleteTextures(1, &texture.id);
 }
