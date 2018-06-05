@@ -1,5 +1,8 @@
 #pragma once
 #include "component.h"
+#include <glm\ext.hpp>
+#include <glm\gtx\string_cast.hpp>
+
 class UserScriptComponent : public Component
 {
 public:

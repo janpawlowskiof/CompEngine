@@ -61,6 +61,7 @@ void RendererMaster::Initialize()
 	//
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSwapInterval(1);	//CAP - UNCAP FRAMERATE
 
 	projectionMatrix = glm::perspective(glm::radians(60.0f), (float)WIDTH/HEIGHT, 0.1f, 100.0f);
 
