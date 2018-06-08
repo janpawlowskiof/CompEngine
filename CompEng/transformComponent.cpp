@@ -13,6 +13,7 @@ glm::mat4 TransformComponent::GetModelMatrix()	//Get matrix that we use in shade
 void TransformComponent::Rotate(glm::quat quaterion)
 {
 	rotation *= quaterion;
+	rotation = glm::normalize(rotation);
 }
 
 TransformComponent::~TransformComponent()

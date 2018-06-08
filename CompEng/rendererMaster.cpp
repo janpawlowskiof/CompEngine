@@ -43,13 +43,13 @@ void RendererMaster::Initialize()
 
 	//Enabling OpenGl Features
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
 
 	basicShader = new Shader("res/basicShader.vs", "res/basicShader.fs");	//Create Basic Shader
 	basicShader->use();
-	//currentShader = basicShader;
-	//basicShader->setVec3("lightColor", 1,1,1);
+	currentShader = basicShader;
+	basicShader->setVec3("lightColor", 1,1,1);
 
 	lightingShader = new Shader("res/lightingShader.vs", "res/lightingShader.fs");	//Create Basic Shader
 	lightingShader->use();
@@ -76,7 +76,13 @@ void RendererMaster::Initialize()
 
 	//ourModel = new Model("D:/Projekty2/VS/CompEng/CompEng/res/nanosuit/nanosuit.obj");;
 	//ourModel = new Model("D:/Projekty2/VS/CompEng/CompEng/res/car/car.obj");;
-}   
+} 
+
+/*void RendererMaster::Update()
+{
+	glfwSwapBuffers(window);
+	glfwPollEvents();
+}*/
 
 void RendererMaster::Update()
 {
@@ -154,6 +160,8 @@ void RendererMaster::Update()
 
 	glfwSwapBuffers(window);
 	glfwPollEvents();
+
+	//glClear(GL_COLOR_BUFFER_BIT);
 }
 
 RendererMaster::RendererMaster()

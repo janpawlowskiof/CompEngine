@@ -27,11 +27,6 @@ private:
 	Shader* basicShader;
 	Shader* lightingShader;
 
-	Shader* currentShader;
-
-	GLFWwindow* window;
-	Camera* camera;
-
 	//Matrix - Camera Stuff
 	glm::mat4 modelMatrix;	//Model
 	glm::mat4 viewMatrix;	//View
@@ -44,6 +39,10 @@ private:
 	/*END TESTING TEMP VARIABLES*/
 
 public:
+	GLFWwindow * window;	//temp
+	Shader* currentShader;
+	Camera* camera;
+
 	bool closeProgramFlag;
 
 	RendererMaster();
