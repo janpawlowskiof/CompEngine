@@ -16,6 +16,12 @@ void TransformComponent::Rotate(glm::quat quaterion)
 	rotation = glm::normalize(rotation);
 }
 
+void TransformComponent::RotateGlobal(glm::quat quaterion)
+{
+	rotation = quaterion * rotation;
+	rotation = glm::normalize(rotation);
+}
+
 TransformComponent::~TransformComponent()
 {
 }

@@ -32,10 +32,6 @@ private:
 	glm::mat4 viewMatrix;	//View
 	glm::mat4 projectionMatrix; //Projection
 
-	//unsigned int modelMatrixLoc;	//Locations
-	//unsigned int viewMatrixLoc;
-	//unsigned int projectionMatrixLoc;
-
 	/*END TESTING TEMP VARIABLES*/
 
 public:

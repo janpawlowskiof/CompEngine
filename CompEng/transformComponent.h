@@ -20,6 +20,7 @@ public:
 
 	glm::mat4 GetModelMatrix();	//method to get matrix that we use later on in shader
 	void Rotate(glm::quat quaterion);
+	void RotateGlobal(glm::quat quaterion);
 
 	//float angle = 0.0f;
 	std::string type() { return "Transform"; }

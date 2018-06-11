@@ -56,7 +56,7 @@ void RendererMaster::Initialize()
 	currentShader = lightingShader;
 
 	//Temporary Camera Configuration
-	camera = new Camera(glm::vec3(0.0f, 0.0f, 4.0f));
+	camera = new Camera(glm::vec3(0.0f, 2.0f, 6.0f));
 	camera->Initialize(window);
 	//
 
@@ -118,7 +118,7 @@ void RendererMaster::Update()
 		case LIGHT_POINT:
 			TransformComponent * transform = (TransformComponent*)(baseObject->GetComponent("Transform"));
 			if (transform == NULL)
-				std::cout << "POINT LIGHT MUST HVE A TRANSFORM COMPONENT" << std::endl;
+				std::cout << "POINT LIGHT MUST HAVE A TRANSFORM COMPONENT" << std::endl;
 			currentShader->setVec3(std::string("pointLights[") + std::to_string(activePointLights) + std::string("].position"), transform->position);
 			currentShader->setVec3(std::string("pointLights[") + std::to_string(activePointLights) + std::string("].ambient"), light->ambient);
 			currentShader->setVec3(std::string("pointLights[") + std::to_string(activePointLights) + std::string("].diffuse"), light->diffuse);

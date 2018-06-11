@@ -3,6 +3,8 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <glm\ext.hpp>
+#include <glm\gtx\string_cast.hpp>
 
 class BaseObject;
 
