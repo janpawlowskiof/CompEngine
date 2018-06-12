@@ -63,11 +63,13 @@ public:
 private:
 	void CalculateNormal()
 	{
-		normal = glm::normalize(glm::cross(supports[1].point - supports[0].point, supports[2].point - supports[0].point));	//normal
+		normal = glm::cross(supports[1].point - supports[0].point, supports[2].point - supports[0].point);	//normal
 		if (glm::dot(normal, supports[1].point) < 0)	//normal pointing inwards (we want it outwards)
 			normal = -normal;	//we now have normal
 		if (normal.x != normal.x)	//NaN error, objects probably touching
 			normal = glm::vec3(1, 1, 1);
+
+		normal = glm::normalize(normal);
 	}
 
 	//das broken :c
@@ -107,16 +109,21 @@ public:
 	glm::vec3 localPositionA;
 	glm::vec3 localPositionB;
 
+	glm::vec3 tangentA;
+	glm::vec3 tangentB;
+
 	ColliderComponent* colliderA;
 	ColliderComponent* colliderB;
 
 	CollsionData() {};
-	CollsionData(glm::vec3 contactPoint, glm::vec3 normal, float penetration, ColliderComponent* colliderA, ColliderComponent* colliderB)
+	CollsionData(glm::vec3 contactPoint, glm::vec3 normal, float penetration, ColliderComponent* colliderA, ColliderComponent* colliderB, glm::vec3 tangentA, glm::vec3 tangentB)
 	{
 		this->contactPoint = contactPoint;
 		this->normal = normal;
 		this->penetration = penetration;
 		this->colliderA = colliderA;
 		this->colliderB = colliderB;
+		this->tangentA = tangentA;
+		this->tangentB = tangentB;
 	}
 };

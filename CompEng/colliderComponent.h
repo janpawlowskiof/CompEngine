@@ -7,6 +7,8 @@
 class ColliderComponent : public Component
 {
 public:
+	float elasticity = 0.35;
+
 	std::string type() { return "Collider"; }
 
 	virtual glm::vec3 Support(glm::vec3 D)	//box by default

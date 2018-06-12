@@ -10,7 +10,7 @@ void RigidbodyComponent::Update()
 {
 	TransformComponent* transform = (TransformComponent*)baseObject->GetComponent("Transform");
 
-	glm::vec3 acceleration = force / mass;
+	glm::vec3 acceleration = force * inverseMass;
 	transform->position += velocity * dT + acceleration * dT * dT / 2.0;
 	velocity += acceleration * dT;
 

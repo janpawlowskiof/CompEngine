@@ -12,8 +12,8 @@ public:
 	//propeties
 	glm::vec3 velocity;
 	glm::vec3 angularVelocity;
-	float mass = 1.0f;
-	float momentOfInteria = 1.0f;	//???
+	float inverseMass = 1.0f;
+	float inverseInteria = 1.0f;	//???
 
 	//methods
 	void Update();
