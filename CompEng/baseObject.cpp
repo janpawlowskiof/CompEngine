@@ -16,6 +16,8 @@ Component* BaseObject::GetComponent(std::string type)		//Method for gettig compo
 void BaseObject::AddComponent(Component* component)	//Method for adding component of certain type
 {
 	//TODO add check for this component type existing
+	component->baseObject = this;
+	component->OnAttach();
 	componentCollection.push_back(component);
 }
 

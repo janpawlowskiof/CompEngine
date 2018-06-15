@@ -18,6 +18,7 @@ private:
 	float OriginTringleDistance(Simplex triangle);
 	SupportPoint Support(ColliderComponent* colliderA, ColliderComponent* colliderB, glm::vec3 D);
 	void ProcessObjects(BaseObject* objectA, BaseObject* objectB);
+	void ProcessObjects2(BaseObject* objectA, BaseObject* objectB);
 public:
 	void Initialize();
 	void Update();

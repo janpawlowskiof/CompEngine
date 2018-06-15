@@ -12,11 +12,12 @@ public:
 	//propeties
 	glm::vec3 velocity;
 	glm::vec3 angularVelocity;
-	float inverseMass = 1.0f;
-	float inverseInteria = 1.0f;	//???
+	float mass = 1.0f;
 
 	//methods
-	void Update();
+	void Update();	//override
+	float GetMass() { return mass; };
+	float GetInverseMass() { return 1.0/mass; };
 
 	std::string type() { return "Rigidbody"; }
 
