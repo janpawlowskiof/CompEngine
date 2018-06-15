@@ -99,7 +99,7 @@ private:
 
 class ColliderComponent;
 
-class CollsionData
+class CollisionData
 {
 public:
 	glm::vec3 contactPoint;
@@ -115,8 +115,8 @@ public:
 	ColliderComponent* colliderA;
 	ColliderComponent* colliderB;
 
-	CollsionData() {};
-	CollsionData(glm::vec3 contactPoint, glm::vec3 normal, float penetration, ColliderComponent* colliderA, ColliderComponent* colliderB, glm::vec3 tangentA, glm::vec3 tangentB)
+	CollisionData() {};
+	CollisionData(glm::vec3 contactPoint, glm::vec3 normal, float penetration, ColliderComponent* colliderA, ColliderComponent* colliderB, glm::vec3 tangentA, glm::vec3 tangentB)
 	{
 		this->contactPoint = contactPoint;
 		this->normal = normal;

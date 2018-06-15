@@ -45,156 +45,6 @@ void PhysicsMaster::Update()
 	}
 }
 
-void PhysicsMaster::ProcessObjects(BaseObject * objectA, BaseObject * objectB)
-{
-	ColliderComponent* colliderA = (ColliderComponent*)(objectA->GetComponent("Collider"));
-	ColliderComponent* colliderB = (ColliderComponent*)(objectB->GetComponent("Collider"));
-	
-	RigidbodyComponent* rigidbodyA = (RigidbodyComponent*)objectA->GetComponent("Rigidbody");
-	RigidbodyComponent* rigidbodyB = (RigidbodyComponent*)objectB->GetComponent("Rigidbody");
-
-	TransformComponent* transformA = (TransformComponent*)objectA->GetComponent("Transform");
-	TransformComponent* transformB = (TransformComponent*)objectB->GetComponent("Transform");
-
-	CollsionData collisionData;
-
-	if (GetObjectsCollsionData(colliderA, colliderB, collisionData))
-	{
-		glm::mat4 modelA = transformA->GetModelMatrix();
-		glm::mat4 modelB = transformB->GetModelMatrix();
-
-		float E = (colliderA->elasticity + colliderB->elasticity)/2.0f;	//sprê¿ystoœæ
-
-		/*absolutely incorrect testing caching contact points*/
-		/*glm::vec3 collisionPoint = glm::vec3(0);
-		glm::vec3 n = collisionData.normal;
-
-		collisionData.localPositionA = glm::inverse(modelA) * glm::vec4(collisionData.contactPoint, 1.0);
-
-		for (int i = 0; i < collisions.size(); ++i)
-		{
-			if (AlmostEqual(collisions[i].localPositionA, collisionData.localPositionA, 0.01f))
-			{
-				collisions.erase(collisions.begin() + i);
-				i--;
-			}
-		}
-
-		collisions.push_back(collisionData);
-		if (collisions.size() > 1)
-			collisions.erase(collisions.begin());
-
-		for (int i = 0; i < collisions.size(); ++i)
-		{
-			glm::vec3 worldPositionA = modelA * glm::vec4(collisions[i].localPositionA, 1.0);
-			collisionPoint += worldPositionA;
-		}
-		collisionPoint /= collisions.size();*/
-		/*end of contact caching*/
-
-		/*alternative to above*/
-		glm::vec3 collisionPoint = collisionData.contactPoint;
-		glm::vec3 n = collisionData.normal;
-		/*end of alternative*/
-
-		glm::vec3 rA = collisionPoint - transformA->position;
-		glm::vec3 rB = collisionPoint - transformB->position;
-
-		glm::vec3 pA, pB;
-		if (rigidbodyA != NULL)
-			pA = rigidbodyA->velocity + glm::cross(rigidbodyA->angularVelocity, rA);
-		else
-			pA = glm::vec3(0);
-
-		if (rigidbodyB != NULL)
-			pB = rigidbodyB->velocity + glm::cross(rigidbodyB->angularVelocity, rB);
-		else
-			pB = glm::vec3(0);
-
-		float inverseInteriaA, inverseMassA;
-		if (rigidbodyA != NULL)
-		{
-			inverseInteriaA = 1;
-			inverseMassA = rigidbodyA->GetInverseMass();
-		}
-		else
-		{
-			inverseInteriaA = 0;
-			inverseMassA = 0;
-		}
-
-		float inverseInteriaB, inverseMassB;
-		if (rigidbodyB != NULL)
-		{
-			inverseInteriaB = 1;
-			inverseMassB = rigidbodyB->GetInverseMass();
-		}
-		else
-		{
-			inverseInteriaB = 0;
-			inverseMassB = 0;
-		}
-
-		float vRel = glm::dot(n, pA - pB);
-
-		float j = -(1.0 + E) * vRel;
-		j /= inverseMassA + inverseMassB + glm::dot(n, glm::cross(inverseInteriaA * glm::cross(rA, n), rA)) + glm::dot(n, glm::cross(inverseInteriaB * glm::cross(rB, n), rB));
-		glm::vec3 J = j * n;
-
-		float f = 0.05f;
-		glm::vec3 nVel = n * vRel;
-		glm::vec3 tVel = pA - pB - nVel;
-		//glm::vec3 T1 = j * f * glm::dot(collisionData.tangentA, pA - pB) * collisionData.tangentA;
-		//glm::vec3 T2 = j * f * glm::dot(collisionData.tangentB, pA - pB) * collisionData.tangentB;
-
-		//T1 = glm::min(T1, glm::dot(collisionData.tangentA, pA - pB) * collisionData.tangentA);
-		//T2 = glm::min(T2, glm::dot(collisionData.tangentB, pA - pB) * collisionData.tangentB);
-
-		//J -= T1 + T2;
-		J -= tVel * f;
-
-		glm::vec3 dVA = J * inverseMassA;	//delta velocity A
-		glm::vec3 dVB = J * inverseMassB;	//delta velocity B
-		float mdVA = glm::length(dVA);		//magnitude of dVA
-		float mdVB = glm::length(dVB);
-
-		if (rigidbodyA != NULL)
-		{
-			rigidbodyA->velocity += dVA;
-			rigidbodyA->angularVelocity += glm::cross(rA, J) * inverseInteriaA;
-
-			transformA->position += mdVA / (mdVA + mdVB) * n * collisionData.penetration;
-
-			glm::vec3 angleChangeA = inverseInteriaA * glm::cross(rA, J);
-			glm::quat qx = glm::angleAxis(0.02f * angleChangeA.x, glm::vec3(1, 0, 0));
-			glm::quat qy = glm::angleAxis(0.02f * angleChangeA.y, glm::vec3(0, 1, 0));
-			glm::quat qz = glm::angleAxis(0.02f * angleChangeA.z, glm::vec3(0, 0, 1));
-			transformA->RotateGlobal(qx * qy * qz);
-		}
-
-		if (rigidbodyB != NULL)
-		{
-			rigidbodyB->velocity += -dVB;
-			rigidbodyB->angularVelocity += -glm::cross(rB, J) * inverseInteriaB;
-
-			transformB->position += -mdVB / (mdVA + mdVB) * n * collisionData.penetration;
-
-			glm::vec3 angleChangeB = -inverseInteriaB * glm::cross(rB, J);
-			glm::quat qx = glm::angleAxis(0.02f * angleChangeB.x, glm::vec3(1, 0, 0));
-			glm::quat qy = glm::angleAxis(0.02f * angleChangeB.y, glm::vec3(0, 1, 0));
-			glm::quat qz = glm::angleAxis(0.02f * angleChangeB.z, glm::vec3(0, 0, 1));
-			transformB->RotateGlobal(qx * qy * qz);
-		}
-
-		//BaseObject* s1 = BaseObject::Find("Sphere1");
-		//TransformComponent* tr1 = (TransformComponent*)s1->GetComponent("Transform");
-	}
-	else
-	{
-		collisions.clear();
-	}
-}
-
 void PhysicsMaster::ProcessObjects2(BaseObject * objectA, BaseObject * objectB)
 {
 	ColliderComponent* colliderA = (ColliderComponent*)(objectA->GetComponent("Collider"));
@@ -206,7 +56,7 @@ void PhysicsMaster::ProcessObjects2(BaseObject * objectA, BaseObject * objectB)
 	TransformComponent* transformA = (TransformComponent*)objectA->GetComponent("Transform");
 	TransformComponent* transformB = (TransformComponent*)objectB->GetComponent("Transform");
 
-	CollsionData collisionData;
+	CollisionData collisionData;
 
 	if (GetObjectsCollsionData(colliderA, colliderB, collisionData))
 	{
@@ -260,7 +110,7 @@ void PhysicsMaster::ProcessObjects2(BaseObject * objectA, BaseObject * objectB)
 		j /= inverseMassA + inverseMassB + glm::dot(n, glm::cross(inverseInteriaA * glm::cross(rA, n), rA)) + glm::dot(n, glm::cross(inverseInteriaB * glm::cross(rB, n), rB));
 		glm::vec3 J = j * n;
 
-		float f = 0.55f;
+		float f = 0.05f;
 
 		glm::vec3 t1 = collisionData.tangentA;
 		glm::vec3 t2 = collisionData.tangentB;
@@ -299,7 +149,12 @@ void PhysicsMaster::ProcessObjects2(BaseObject * objectA, BaseObject * objectB)
 	}
 }
 
-bool PhysicsMaster::GetObjectsCollsionData(ColliderComponent* colliderA, ColliderComponent* colliderB, CollsionData& collisionData)
+bool PhysicsMaster::ContactValid(CollisionData * collision)
+{
+	return false;
+}
+
+bool PhysicsMaster::GetObjectsCollsionData(ColliderComponent* colliderA, ColliderComponent* colliderB, CollisionData& collisionData)
 {
 	SupportPoint S = Support(colliderA, colliderB, glm::vec3(0,1,0));	//random dir
 	Simplex simplex(S);
@@ -324,7 +179,7 @@ bool PhysicsMaster::GetObjectsCollsionData(ColliderComponent* colliderA, Collide
 	return false;
 }
 
-bool PhysicsMaster::DoSimplex(Simplex& simplex, glm::vec3& D, ColliderComponent* colliderA, ColliderComponent* colliderB, CollsionData& collisionData)
+bool PhysicsMaster::DoSimplex(Simplex& simplex, glm::vec3& D, ColliderComponent* colliderA, ColliderComponent* colliderB, CollisionData& collisionData)
 {
 	if (simplex.count == 2)
 	{
@@ -439,7 +294,7 @@ bool PhysicsMaster::DoSimplex(Simplex& simplex, glm::vec3& D, ColliderComponent*
 	}
 }
 
-CollsionData PhysicsMaster::BuildPolytope(Simplex base, ColliderComponent* colliderA, ColliderComponent* colliderB)
+CollisionData PhysicsMaster::BuildPolytope(Simplex base, ColliderComponent* colliderA, ColliderComponent* colliderB)
 {
 	std::vector<Simplex> faces;
 	faces.push_back(Simplex(base.supports[0], base.supports[1], base.supports[2]));
@@ -505,7 +360,7 @@ CollsionData PhysicsMaster::BuildPolytope(Simplex base, ColliderComponent* colli
 				tangentA = glm::normalize(glm::cross(n, glm::vec3(1,0,0)));
 
 			tangentB = glm::cross(n, tangentA);
-			return CollsionData(collisionPointA, n, closestDistance, colliderA, colliderB, tangentA, tangentB);
+			return CollisionData(collisionPointA, n, closestDistance, colliderA, colliderB, tangentA, tangentB);
 		}
 		else
 		{

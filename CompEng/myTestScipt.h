@@ -25,7 +25,7 @@ public:
 		TransformComponent* transformC = (TransformComponent*)cubeC->GetComponent("Transform");
 
 		RigidbodyComponent* rigidbodyA = (RigidbodyComponent*)cubeA->GetComponent("Rigidbody");
-		rigidbodyA->velocity = glm::vec3(2.0, -25.3, 0);
+		rigidbodyA->velocity = glm::vec3(2.0, 0.0, 0);
 		//rigidbodyA->angularVelocity = glm::vec3(0, 0, -4);
 
 		RigidbodyComponent* rigidbodyB = (RigidbodyComponent*)cubeB->GetComponent("Rigidbody");
