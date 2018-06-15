@@ -18,7 +18,7 @@ void RigidbodyComponent::Update()
 	velocity += acceleration * dT;
 
 	glm::mat3 rotationMat = transform->GetRotationMatrix();
-	glm::vec3 angularAcceleration = rotationMat * collider->GetInverseInteria() * glm::transpose(rotationMat) * torque * dT;
+	glm::vec3 angularAcceleration = collider->GetGlobalInverseInteria() * torque * dT;
 	angularVelocity += angularAcceleration;
 
 	glm::quat qx = glm::angleAxis(dT * angularVelocity.x, glm::vec3(1, 0, 0));

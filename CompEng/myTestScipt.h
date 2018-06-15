@@ -18,14 +18,12 @@ public:
 	{
 		cubeA = BaseObject::Find("Cube1");
 		cubeB = BaseObject::Find("Cube2");
-		cubeC = BaseObject::Find("Cube3");
 
 		TransformComponent* transformA = (TransformComponent*)cubeA->GetComponent("Transform");
 		TransformComponent* transformB = (TransformComponent*)cubeB->GetComponent("Transform");
-		TransformComponent* transformC = (TransformComponent*)cubeC->GetComponent("Transform");
 
 		RigidbodyComponent* rigidbodyA = (RigidbodyComponent*)cubeA->GetComponent("Rigidbody");
-		rigidbodyA->velocity = glm::vec3(2.0, 0.0, 0);
+		rigidbodyA->velocity = glm::vec3(0.0, -5.0, 0);
 		//rigidbodyA->angularVelocity = glm::vec3(0, 0, -4);
 
 		RigidbodyComponent* rigidbodyB = (RigidbodyComponent*)cubeB->GetComponent("Rigidbody");

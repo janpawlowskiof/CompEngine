@@ -102,7 +102,8 @@ class ColliderComponent;
 class CollisionData
 {
 public:
-	glm::vec3 contactPoint;
+	glm::vec3 globalPositionA;
+	glm::vec3 globalPositionB;
 	glm::vec3 normal;
 	float penetration;
 
@@ -116,9 +117,12 @@ public:
 	ColliderComponent* colliderB;
 
 	CollisionData() {};
-	CollisionData(glm::vec3 contactPoint, glm::vec3 normal, float penetration, ColliderComponent* colliderA, ColliderComponent* colliderB, glm::vec3 tangentA, glm::vec3 tangentB)
+	CollisionData(glm::vec3 globalPositionA, glm::vec3 globalPositionB, glm::vec3 localPositionA, glm::vec3 localPositionB, glm::vec3 normal, float penetration, ColliderComponent* colliderA, ColliderComponent* colliderB, glm::vec3 tangentA, glm::vec3 tangentB)
 	{
-		this->contactPoint = contactPoint;
+		this->globalPositionA = globalPositionA;
+		this->globalPositionB = globalPositionB;
+		this->localPositionA = localPositionA;
+		this->localPositionB = localPositionB;
 		this->normal = normal;
 		this->penetration = penetration;
 		this->colliderA = colliderA;

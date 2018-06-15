@@ -116,7 +116,7 @@ void MeshComponent::Draw(Shader* shader)
 
 	// draw mesh
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_LINE_LOOP, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
 

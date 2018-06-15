@@ -8,12 +8,22 @@
 class ColliderComponent : public Component
 {
 public:
-	float elasticity = 0.25;
+	float elasticity = 0.2;
 	glm::mat3 interia;
 
 	std::string type() { return "Collider"; }
 
-	virtual glm::mat3 GetInverseInteria() { return glm::inverse(interia); }
+	virtual glm::mat3 GetLocalInverseInteria()
+	{
+		return glm::inverse(interia);
+	}
+
+	virtual glm::mat3 GetGlobalInverseInteria()
+	{
+		TransformComponent* transform = (TransformComponent*)baseObject->GetComponent("Transform");
+		auto rotationMat = transform->GetRotationMatrix();
+		return rotationMat * GetLocalInverseInteria() * glm::transpose(rotationMat);
+	}
 
 	virtual void RecalculateInteria()
 	{

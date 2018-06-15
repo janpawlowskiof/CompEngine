@@ -102,6 +102,6 @@ void main()
 	for(int i = 0; i < activePointLights; ++i)
 		result+=CalculatePointLight(pointLights[i], viewDir);
 
-	FragColor = vec4(result, 1.0);
-	//   FragColor = vec4(vec3(FragPos.z),1.0);
+	//FragColor = vec4(result, 1.0);
+	   FragColor = vec4(material.color_diffuse1 ,1.0);
 }

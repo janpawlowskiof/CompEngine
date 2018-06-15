@@ -18,6 +18,8 @@ public:
 	glm::vec3 scale = glm::vec3(1);
 	glm::quat rotation;
 
+	glm::vec3 LocalToGlobalSpace(glm::vec3);
+	glm::vec3 GlobalToLocalSpace(glm::vec3);
 	glm::mat4 GetModelMatrix();	//method to get matrix that we use later on in shader
 	glm::mat3 GetRotationMatrix();
 	void Rotate(glm::quat quaterion);

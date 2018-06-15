@@ -5,7 +5,9 @@
 #include "rendererMaster.h"
 
 #define MAX_EPA_ITERATIONS 32
-#define MAX_GJK_ITERATIONS 64
+#define MAX_GJK_ITERATIONS 32
+
+#define PERSISTENT_THREASHOLD 0.1
 
 extern std::vector<BaseObject*> baseObjectCollection;
 extern RendererMaster* rendererMaster;
@@ -56,12 +58,42 @@ void PhysicsMaster::ProcessObjects2(BaseObject * objectA, BaseObject * objectB)
 	TransformComponent* transformA = (TransformComponent*)objectA->GetComponent("Transform");
 	TransformComponent* transformB = (TransformComponent*)objectB->GetComponent("Transform");
 
+	BaseObject* sphere1 = BaseObject::Find("Sphere1");
+	TransformComponent* sphere1T = (TransformComponent*)sphere1->GetComponent("Transform");
+
 	CollisionData collisionData;
 
-	if (GetObjectsCollsionData(colliderA, colliderB, collisionData))
+	if (GetObjectsCollisionData(colliderA, colliderB, collisionData))
 	{
-		float E = (colliderA->elasticity + colliderB->elasticity) / 2.0f;	//sprê¿ystoœæ
-		glm::vec3 collisionPoint = collisionData.contactPoint;
+		for (int i = 0; i < contacts.size(); ++i)
+		{
+			if (!ContactValid(&contacts[i]))
+			{
+				contacts.erase(contacts.begin() + i);
+				i--;
+			}
+		}
+
+		if(ContactFarEnough(&collisionData))
+			contacts.push_back(collisionData);
+
+		if (contacts.size() > 1)
+			contacts.erase(contacts.begin());
+
+		std::cout << "c: " << contacts.size() << " \n";
+
+		glm::vec3 collisionPoint = glm::vec3(0);
+
+		for (CollisionData& contact : contacts)
+			collisionPoint += transformA->LocalToGlobalSpace(contact.localPositionA);
+		collisionPoint /= (float)contacts.size();
+
+		//collisionPoint = transformA->LocalToGlobalSpace(glm::vec3(0, -1, 0));
+
+		sphere1T->position = collisionPoint;
+
+		float E = (colliderA->elasticity + colliderB->elasticity)/2.0f;	//sprê¿ystoœæ
+		//glm::vec3 collisionPoint = collisionData.globalPositionA;
 		glm::vec3 n = collisionData.normal;
 
 		glm::vec3 rA = collisionPoint - transformA->position;
@@ -82,7 +114,7 @@ void PhysicsMaster::ProcessObjects2(BaseObject * objectA, BaseObject * objectB)
 		glm::mat3 inverseInteriaA;
 		if (rigidbodyA != NULL)
 		{
-			inverseInteriaA = colliderA->GetInverseInteria();
+			inverseInteriaA = colliderA->GetGlobalInverseInteria();
 			inverseMassA = rigidbodyA->GetInverseMass();
 		}
 		else
@@ -95,7 +127,7 @@ void PhysicsMaster::ProcessObjects2(BaseObject * objectA, BaseObject * objectB)
 		glm::mat3 inverseInteriaB;
 		if (rigidbodyB != NULL)
 		{
-			inverseInteriaB = colliderB->GetInverseInteria();
+			inverseInteriaB = colliderB->GetGlobalInverseInteria();
 			inverseMassB = rigidbodyB->GetInverseMass();
 		}
 		else
@@ -110,7 +142,7 @@ void PhysicsMaster::ProcessObjects2(BaseObject * objectA, BaseObject * objectB)
 		j /= inverseMassA + inverseMassB + glm::dot(n, glm::cross(inverseInteriaA * glm::cross(rA, n), rA)) + glm::dot(n, glm::cross(inverseInteriaB * glm::cross(rB, n), rB));
 		glm::vec3 J = j * n;
 
-		float f = 0.05f;
+		float f = 0.55f;
 
 		glm::vec3 t1 = collisionData.tangentA;
 		glm::vec3 t2 = collisionData.tangentB;
@@ -124,7 +156,6 @@ void PhysicsMaster::ProcessObjects2(BaseObject * objectA, BaseObject * objectB)
 		glm::vec3 T2 = mT2 * t2;
 
 		J += f * (T1 + T2);
-		//J -= f * (pA - pB - n * vRel);
 
 		glm::vec3 dVA = J * inverseMassA;	//delta velocity A
 		glm::vec3 dVB = J * inverseMassB;	//delta velocity B
@@ -134,6 +165,8 @@ void PhysicsMaster::ProcessObjects2(BaseObject * objectA, BaseObject * objectB)
 		if (rigidbodyA != NULL)
 		{
 			rigidbodyA->velocity += dVA;
+
+			rigidbodyA->angularVelocity *= 0.8f;	//hack
 			rigidbodyA->angularVelocity += inverseInteriaA * glm::cross(rA, J);
 
 			transformA->position += mdVA / (mdVA + mdVB) * n * collisionData.penetration;
@@ -142,19 +175,47 @@ void PhysicsMaster::ProcessObjects2(BaseObject * objectA, BaseObject * objectB)
 		if (rigidbodyB != NULL)
 		{
 			rigidbodyB->velocity += -dVB;
+
+			rigidbodyB->angularVelocity *= 0.8f;	//hack
 			rigidbodyB->angularVelocity += -inverseInteriaB * glm::cross(rB, J);
 
 			transformB->position += -mdVB / (mdVA + mdVB) * n * collisionData.penetration;
 		}
 	}
+	else
+	{
+		contacts.clear();
+	}
 }
 
-bool PhysicsMaster::ContactValid(CollisionData * collision)
+bool PhysicsMaster::ContactValid(CollisionData* contact)
 {
-	return false;
+	glm::vec3 localToGlobalA = ((TransformComponent*)contact->colliderA->baseObject->GetComponent("Transform"))->LocalToGlobalSpace(contact->localPositionA);
+	glm::vec3 localToGlobalB = ((TransformComponent*)contact->colliderB->baseObject->GetComponent("Transform"))->LocalToGlobalSpace(contact->localPositionB);
+	glm::vec3 rAB = localToGlobalA - localToGlobalB;
+	glm::vec3 rA = contact->globalPositionA - localToGlobalA;
+	glm::vec3 rB = contact->globalPositionB - localToGlobalB;
+
+	if (glm::length(rA) < PERSISTENT_THREASHOLD && glm::length(rB) < PERSISTENT_THREASHOLD && glm::dot(-contact->normal, rAB) <= 0.0f)
+		return true;
+	else
+		return false;
 }
 
-bool PhysicsMaster::GetObjectsCollsionData(ColliderComponent* colliderA, ColliderComponent* colliderB, CollisionData& collisionData)
+bool PhysicsMaster::ContactFarEnough(CollisionData *newContact)
+{
+	for (CollisionData& contact : contacts)
+	{
+		glm::vec3 rA = newContact->globalPositionA - contact.globalPositionA;
+		glm::vec3 rB = newContact->globalPositionB - contact.globalPositionB;
+
+		if (glm::length(rA) < PERSISTENT_THREASHOLD || glm::length(rB) < PERSISTENT_THREASHOLD)
+			return false;
+	}
+	return true;
+}
+
+bool PhysicsMaster::GetObjectsCollisionData(ColliderComponent* colliderA, ColliderComponent* colliderB, CollisionData& collisionData)
 {
 	SupportPoint S = Support(colliderA, colliderB, glm::vec3(0,1,0));	//random dir
 	Simplex simplex(S);
@@ -360,7 +421,11 @@ CollisionData PhysicsMaster::BuildPolytope(Simplex base, ColliderComponent* coll
 				tangentA = glm::normalize(glm::cross(n, glm::vec3(1,0,0)));
 
 			tangentB = glm::cross(n, tangentA);
-			return CollisionData(collisionPointA, n, closestDistance, colliderA, colliderB, tangentA, tangentB);
+
+			glm::vec3 localPositionA = ((TransformComponent*)colliderA->baseObject->GetComponent("Transform"))->GlobalToLocalSpace(collisionPointA);
+			glm::vec3 localPositionB = ((TransformComponent*)colliderB->baseObject->GetComponent("Transform"))->GlobalToLocalSpace(collisionPointB);
+
+			return CollisionData(collisionPointA, collisionPointB, localPositionA, localPositionB, n, closestDistance, colliderA, colliderB, tangentA, tangentB);
 		}
 		else
 		{

@@ -10,7 +10,7 @@ private:
 	std::vector<CollisionData> contacts;
 
 	//methods
-	bool GetObjectsCollsionData(ColliderComponent* colliderA, ColliderComponent* colliderB, CollisionData& collisionData);
+	bool GetObjectsCollisionData(ColliderComponent* colliderA, ColliderComponent* colliderB, CollisionData& collisionData);
 	bool DoSimplex(Simplex& simplex, glm::vec3& D, ColliderComponent* colliderA, ColliderComponent* colliderB, CollisionData& collisionData);
 	CollisionData BuildPolytope(Simplex base, ColliderComponent* colliderA, ColliderComponent* colliderB);
 	void Barycentric(glm::vec3 p, glm::vec3 a, glm::vec3 b, glm::vec3 c, float &u, float &v, float &w);
@@ -18,7 +18,8 @@ private:
 	float OriginTringleDistance(Simplex triangle);
 	SupportPoint Support(ColliderComponent* colliderA, ColliderComponent* colliderB, glm::vec3 D);
 	void ProcessObjects2(BaseObject* objectA, BaseObject* objectB);
-	bool ContactValid(CollisionData* collision);
+	bool ContactValid(CollisionData*);
+	bool ContactFarEnough(CollisionData*);
 public:
 	void Initialize();
 	void Update();
