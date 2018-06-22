@@ -106,6 +106,7 @@ public:
 	glm::vec3 globalPositionB;
 	glm::vec3 normal;
 	float penetration;
+	float actualPenetration;
 
 	glm::vec3 localPositionA;
 	glm::vec3 localPositionB;
@@ -129,5 +130,7 @@ public:
 		this->colliderB = colliderB;
 		this->tangentA = tangentA;
 		this->tangentB = tangentB;
+
+		actualPenetration = penetration;	//as when the collision object is created these two are equal
 	}
 };

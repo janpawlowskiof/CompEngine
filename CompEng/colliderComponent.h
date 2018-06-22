@@ -8,7 +8,7 @@
 class ColliderComponent : public Component
 {
 public:
-	float elasticity = 0.2;
+	float elasticity = 0.4;
 	glm::mat3 interia;
 
 	std::string type() { return "Collider"; }

@@ -8,6 +8,8 @@ class PhysicsMaster : public Master
 private:
 	//values, lists
 	std::vector<CollisionData> contacts;
+	glm::vec3 linearImpulse;
+	glm::vec3 angularImpulse;
 
 	//methods
 	bool GetObjectsCollisionData(ColliderComponent* colliderA, ColliderComponent* colliderB, CollisionData& collisionData);
@@ -18,7 +20,10 @@ private:
 	float OriginTringleDistance(Simplex triangle);
 	SupportPoint Support(ColliderComponent* colliderA, ColliderComponent* colliderB, glm::vec3 D);
 	void ProcessObjects2(BaseObject* objectA, BaseObject* objectB);
+	void ProcessContact(CollisionData* contact);
+	void RecalculateActualPenetration(CollisionData* contact);
 	bool ContactValid(CollisionData*);
+	bool ContactInsideContactFace(int index);
 	bool ContactFarEnough(CollisionData*);
 public:
 	void Initialize();
