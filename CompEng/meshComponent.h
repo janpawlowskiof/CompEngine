@@ -48,7 +48,6 @@ public:
 	glm::vec3 specularColor = glm::vec3(1, 1, 0.6);
 
 	bool useTexture;
-	std::string type() { return "Mesh"; }
 
 	~MeshComponent();
 private:

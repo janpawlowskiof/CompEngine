@@ -15,7 +15,6 @@ public:
 	unsigned int specularMap;
 	Material material;
 	
-	std::string type() { return "Renderer"; }
 	void Initialize();
 	void Draw(Shader*);
 

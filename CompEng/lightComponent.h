@@ -28,8 +28,6 @@ public:
 	float linear;
 	float quadratic;
 
-	std::string type() { return "Light"; }
-
 	LightComponent(glm::vec3 dir, glm::vec3 am, glm::vec3 di, glm::vec3 sp)
 	{
 		direction = dir;

@@ -68,7 +68,7 @@ void RendererMaster::Initialize()
 
 	for (BaseObject* baseObject : baseObjectCollection)
 	{
-		RendererComponent* renderer = (RendererComponent*)(baseObject->GetComponent("Renderer"));
+		RendererComponent* renderer = baseObject->GetComponent<RendererComponent>();
 		if (renderer != NULL)
 		{
 		//	renderer->Initialize();
@@ -104,7 +104,7 @@ void RendererMaster::Update()
 	int activePointLights = 0;
 	for (BaseObject* baseObject : baseObjectCollection)
 	{
-		LightComponent* light = (LightComponent*)(baseObject->GetComponent("Light"));
+		LightComponent* light = baseObject->GetComponent<LightComponent>();
 		if (light == NULL)
 			continue;
 
@@ -117,7 +117,7 @@ void RendererMaster::Update()
 			currentShader->setVec3("directionalLight.specular", light->specular);
 			break;
 		case LIGHT_POINT:
-			TransformComponent * transform = (TransformComponent*)(baseObject->GetComponent("Transform"));
+			TransformComponent * transform = baseObject->GetComponent<TransformComponent>();
 			if (transform == NULL)
 				std::cout << "POINT LIGHT MUST HAVE A TRANSFORM COMPONENT" << std::endl;
 			currentShader->setVec3(std::string("pointLights[") + std::to_string(activePointLights) + std::string("].position"), transform->position);
@@ -137,10 +137,10 @@ void RendererMaster::Update()
 	//Actual drawing
 	for (BaseObject* baseObject : baseObjectCollection)
 	{
-		MeshComponent* model = (MeshComponent*)(baseObject->GetComponent("Mesh"));
+		MeshComponent* model = baseObject->GetComponent<MeshComponent>();
 		if (model != NULL)
 		{
-			TransformComponent* transform = (TransformComponent*)(baseObject->GetComponent("Transform"));
+			TransformComponent* transform = baseObject->GetComponent<TransformComponent>();
 			if (transform == NULL)
 				std::cout << "null transform!!" << std::endl;
 

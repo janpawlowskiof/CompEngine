@@ -26,7 +26,6 @@ public:
 	void RotateGlobal(glm::quat quaterion);
 
 	//float angle = 0.0f;
-	std::string type() { return "Transform"; }
 	TransformComponent(glm::vec3 pos) { position = pos; };
 	~TransformComponent();
 };

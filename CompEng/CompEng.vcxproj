@@ -161,10 +161,8 @@
     <ClInclude Include="model.h" />
     <ClInclude Include="modelMaster.h" />
     <ClInclude Include="myTestScipt.h" />
-    <ClInclude Include="physicsMaster.h" />
     <ClInclude Include="rendererComponent.h" />
     <ClInclude Include="rendererMaster.h" />
-    <ClInclude Include="rigidbodyComponent.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="shaderSources.h" />
     <ClInclude Include="SphereCollider.h" />
@@ -188,10 +186,8 @@
     <ClCompile Include="meshComponent.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="modelMaster.cpp" />
-    <ClCompile Include="physicsMaster.cpp" />
     <ClCompile Include="rendererComponent.cpp" />
     <ClCompile Include="rendererMaster.cpp" />
-    <ClCompile Include="rigidbodyComponent.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

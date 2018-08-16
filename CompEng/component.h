@@ -14,12 +14,8 @@ private:
 
 public:
 	BaseObject* baseObject;
-	virtual std::string type() { return "null"; }
 	virtual void Initialize(){}
-	virtual void Update()
-	{
-		std::cout << "Updating default" << type() << std::endl;
-	}
+	virtual void Update() {}
 	virtual void OnAttach(){}
 	Component();
 	virtual ~Component();

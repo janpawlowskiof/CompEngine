@@ -7,7 +7,7 @@ void UserScriptMaster::Initialize()
 {
 	for (BaseObject* baseObject : baseObjectCollection)
 	{
-		UserScriptComponent* script = (UserScriptComponent*)(baseObject->GetComponent("UserScript"));
+		UserScriptComponent* script = baseObject->GetComponent<UserScriptComponent>();
 		if (script != NULL)
 		{
 			script->Initialize();
@@ -19,7 +19,7 @@ void UserScriptMaster::Update()
 {
 	for (BaseObject* baseObject : baseObjectCollection)
 	{
-		UserScriptComponent* script = (UserScriptComponent*)(baseObject->GetComponent("UserScript"));
+		UserScriptComponent* script = baseObject->GetComponent<UserScriptComponent>();
 		if (script != NULL)
 		{
 			script->Update();

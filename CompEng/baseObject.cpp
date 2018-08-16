@@ -3,7 +3,7 @@
 
 extern std::vector<BaseObject*> baseObjectCollection;
 
-Component* BaseObject::GetComponent(std::string type)		//Method for gettig component of certain type
+/*Component* BaseObject::GetComponent(std::string type)		//Method for gettig component of certain type
 {
 	for (Component* component : componentCollection)
 	{
@@ -11,7 +11,7 @@ Component* BaseObject::GetComponent(std::string type)		//Method for gettig compo
 			return component;
 	}
 	return NULL;
-}
+}*/
 
 void BaseObject::AddComponent(Component* component)	//Method for adding component of certain type
 {
