@@ -8,8 +8,8 @@ class PhysicsMaster : public Master
 private:
 	//values, lists
 	std::vector<CollisionData> contacts;
-	glm::vec3 linearImpulse;
-	glm::vec3 angularImpulse;
+	glm::vec3 linearImpulseA, linearImpulseB;
+	glm::vec3 angularImpulseA, angularImpulseB;
 
 	//methods
 	bool GetObjectsCollisionData(ColliderComponent* colliderA, ColliderComponent* colliderB, CollisionData& collisionData);
@@ -24,7 +24,14 @@ private:
 	void RecalculateActualPenetration(CollisionData* contact);
 	bool ContactValid(CollisionData*);
 	bool ContactInsideContactFace(int index);
-	bool ContactFarEnough(CollisionData*);
+	bool ContactOnLine(CollisionData* contact, CollisionData* contactA, CollisionData* contactB);
+	bool ContactInsideContactFace(CollisionData*);
+	bool ContactsFarEnough(CollisionData*, CollisionData*);
+	void DeleteContactsInsideManifold();
+	void AddContactToManifold(CollisionData* contact);
+	std::vector<CollisionData*> QuickHull();
+	void DoHull(CollisionData* A, CollisionData* B, std::vector<CollisionData*> &points, std::vector<CollisionData*> &hull);
+	CollisionData* FurthestContactInDirection(glm::vec3 D);
 public:
 	void Initialize();
 	void Update();

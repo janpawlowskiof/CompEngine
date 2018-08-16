@@ -23,13 +23,18 @@ public:
 		TransformComponent* transformB = (TransformComponent*)cubeB->GetComponent("Transform");
 
 		RigidbodyComponent* rigidbodyA = (RigidbodyComponent*)cubeA->GetComponent("Rigidbody");
-		ColliderComponent* colliderA = (ColliderComponent*)cubeA->GetComponent("Collider");
-		rigidbodyA->velocity = glm::vec3(4.0, 0.0, 0);
-		rigidbodyA->mass = 10;
-		colliderA->RecalculateInteria();
-		rigidbodyA->angularVelocity = glm::vec3(7, 0, -1);
-
 		RigidbodyComponent* rigidbodyB = (RigidbodyComponent*)cubeB->GetComponent("Rigidbody");
+		ColliderComponent* colliderA = (ColliderComponent*)cubeA->GetComponent("Collider");
+		ColliderComponent* colliderB = (ColliderComponent*)cubeB->GetComponent("Collider");
+		
+		rigidbodyA->mass = 1;
+		colliderA->RecalculateInteria();
+//		rigidbodyB->mass = 100;
+		colliderB->RecalculateInteria();
+
+		//rigidbodyA->velocity = glm::vec3(2.0, 0.0, 0);
+		rigidbodyA->angularVelocity = glm::vec3(0, 0, -6);
+
 		//transformA->RotateGlobal(glm::angleAxis(0*3.12f / 2.0f, glm::vec3(0, 1, 0)));
 
 		//rigidbodyB->inverseMass = 1.0 / (4.0);
@@ -58,6 +63,7 @@ public:
 
 		//rigidbodyA->torque += glm::vec3(0, 0, 20.5);
 		rigidbodyA->force += glm::vec3(0, -9.81, 0) * rigidbodyA->GetMass();
+		//rigidbodyA->force += glm::vec3(12, 0, 0);
 
 		glm::mat4 modelA = transformA->GetModelMatrix();
 		glm::mat4 modelB = transformB->GetModelMatrix();

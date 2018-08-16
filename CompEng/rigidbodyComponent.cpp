@@ -4,7 +4,7 @@
 #include "colliderComponent.h"
 #include "baseObject.h"
 
-#define dT 0.01f
+#define dT 0.02f
 #define DAMPEN 0.2
 
 void RigidbodyComponent::Update()

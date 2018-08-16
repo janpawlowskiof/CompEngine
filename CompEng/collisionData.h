@@ -4,6 +4,7 @@
 #include <vector>
 #include <glm\ext.hpp>
 #include <glm\gtx\string_cast.hpp>
+#include "transformComponent.h"
 
 struct SupportPoint
 {
@@ -124,6 +125,7 @@ public:
 		this->globalPositionB = globalPositionB;
 		this->localPositionA = localPositionA;
 		this->localPositionB = localPositionB;
+		//this->localPositionB = ((TransformComponent*)colliderB->baseObject->GetComponent("Transform"))->GlobalToLocalSpace(globalPositionA);
 		this->normal = normal;
 		this->penetration = penetration;
 		this->colliderA = colliderA;

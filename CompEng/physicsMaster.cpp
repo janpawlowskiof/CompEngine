@@ -10,13 +10,15 @@
 
 #define PERSISTENT_THREASHOLD 0.1
 
-#define dT 0.01f
+#define dT 0.02f
+#define SEPARATION_VALUE 0.5
 
 extern std::vector<BaseObject*> baseObjectCollection;
 extern RendererMaster* rendererMaster;
 
 void PhysicsMaster::Initialize()
 {
+	std::cout << glm::degrees(glm::angle(glm::normalize(glm::vec3(1, 0, 0)), glm::normalize(glm::vec3(-1, 0, 0))));
 }
 bool skip = false;
 
@@ -71,7 +73,9 @@ void PhysicsMaster::ProcessObjects2(BaseObject * objectA, BaseObject * objectB)
 	ColliderComponent* colliderA = (ColliderComponent*)(objectA->GetComponent("Collider"));
 	ColliderComponent* colliderB = (ColliderComponent*)(objectB->GetComponent("Collider"));
 	RigidbodyComponent* rigidbodyA = (RigidbodyComponent*)(objectA->GetComponent("Rigidbody"));
+	RigidbodyComponent* rigidbodyB = (RigidbodyComponent*)(objectB->GetComponent("Rigidbody"));
 	TransformComponent* transformA = (TransformComponent*)(objectA->GetComponent("Transform"));
+	TransformComponent* transformB = (TransformComponent*)(objectB->GetComponent("Transform"));
 
 
 	CollisionData collisionData;
@@ -88,82 +92,118 @@ void PhysicsMaster::ProcessObjects2(BaseObject * objectA, BaseObject * objectB)
 				i--;
 			}
 		}
+		AddContactToManifold(&collisionData);
 
-		if (ContactFarEnough(&collisionData))
-			contacts.push_back(collisionData);
+		/*bool newContactDeleted = false;
+		contacts.push_back(collisionData);
 
-		if (contacts.size() > 4)
+		if (contacts.size() > 3)
 		{
 			for (int i = 0; i < contacts.size(); ++i)
+			{
 				if (ContactInsideContactFace(i))
 				{
+					if (i == contacts.size() - 1)
+						newContactDeleted = true;
+
 					contacts.erase(contacts.begin() + i);
 					i--;
 				}
+			}
 		}
 
-		if (contacts.size() > 8)
+		for (int i = 0; i < contacts.size(); ++i)
+		{
+			if (i == contacts.size() - 1 && !newContactDeleted)
+				continue;
+
+			if (!ContactsFarEnough(&collisionData, &contacts[i]))
+			{
+				contacts.erase(contacts.begin() + i);
+				i--;
+			}
+		}*/
+		if (glfwGetKey(rendererMaster->window, GLFW_KEY_P))
+			std::cout << "B";
+
+		if (contacts.size() > 1)
 		{
 			contacts.erase(contacts.begin());
 		}
 
-		/*sphere1T->position = transformA->LocalToGlobalSpace(contacts[0].localPositionA);
+		sphere1T->position = transformA->LocalToGlobalSpace(contacts[0].localPositionA);
 		if (contacts.size() > 1)
 			sphere2T->position = transformA->LocalToGlobalSpace(contacts[1].localPositionA);
 		else
 			sphere2T->position = glm::vec3(0, -100, 0);
-
 		if (contacts.size() > 2)
 			sphere3T->position = transformA->LocalToGlobalSpace(contacts[2].localPositionA);
 		else
 			sphere3T->position = glm::vec3(0, -100, 0);
-
 		if (contacts.size() > 3)
 			sphere4T->position = transformA->LocalToGlobalSpace(contacts[3].localPositionA);
 		else
 			sphere4T->position = glm::vec3(0, -100, 0);
-
 		if (contacts.size() > 4)
 			sphere5T->position = transformA->LocalToGlobalSpace(contacts[4].localPositionA);
 		else
 			sphere5T->position = glm::vec3(0, -100, 0);
-
 		if (contacts.size() > 5)
 			sphere6T->position = transformA->LocalToGlobalSpace(contacts[5].localPositionA);
 		else
 			sphere6T->position = glm::vec3(0, -100, 0);
-
 		if (contacts.size() > 6)
 			sphere7T->position = transformA->LocalToGlobalSpace(contacts[6].localPositionA);
 		else
 			sphere7T->position = glm::vec3(0, -100, 0);
-
 		if (contacts.size() > 7)
 			sphere8T->position = transformA->LocalToGlobalSpace(contacts[7].localPositionA);
 		else
-			sphere8T->position = glm::vec3(0, -100, 0);*/
+			sphere8T->position = glm::vec3(0, -100, 0);
+
+		//Sleep(200);	///
 
 		std::cout << contacts.size() << " \n";
 
-		linearImpulse = glm::vec3(0);
-		angularImpulse = glm::vec3(0);
+		linearImpulseA = glm::vec3(0);
+		angularImpulseA = glm::vec3(0);
+		linearImpulseB = glm::vec3(0);
+		angularImpulseB = glm::vec3(0);
 
 		for (int i = 0; i < contacts.size(); ++i)
 			ProcessContact(&contacts[i]);
 
-		CollisionData middleContact = contacts[contacts.size() - 1];
+		/*CollisionData* deepest = &contacts[0];
+		for (int i = 1; i < contacts.size(); ++i)
+			if (contacts[i].actualPenetration > deepest->actualPenetration)
+				deepest = &contacts[i];*/
+		//ProcessContact(&collisionData);
+
+		/*CollisionData avgContact = contacts[contacts.size() - 1];
 		for (int i = 0; i < contacts.size(); ++i)
 		{
-			middleContact.localPositionA += contacts[i].localPositionA;
-			middleContact.actualPenetration += contacts[i].actualPenetration;
+			avgContact.localPositionA += contacts[i].localPositionA;
+			avgContact.localPositionB += contacts[i].localPositionB;
+			avgContact.globalPositionA += contacts[i].globalPositionA;
+			avgContact.actualPenetration += contacts[i].actualPenetration;
 		}
-		middleContact.localPositionA /= (float)contacts.size();
-		middleContact.actualPenetration /= (float)contacts.size();
+		avgContact.localPositionA /= (float)contacts.size();
+		avgContact.localPositionB /= (float)contacts.size();
+		avgContact.globalPositionA /= (float)contacts.size();
+		avgContact.actualPenetration /= (float)contacts.size();
 
-		ProcessContact(&middleContact);
+		ProcessContact(&avgContact);*/
 
-		rigidbodyA->velocity += linearImpulse;
-		rigidbodyA->angularVelocity += angularImpulse;
+		if (rigidbodyA)
+		{
+			rigidbodyA->velocity += linearImpulseA;
+			rigidbodyA->angularVelocity += angularImpulseA;
+		}
+		if (rigidbodyB)
+		{
+			rigidbodyB->velocity += linearImpulseB;
+			rigidbodyB->angularVelocity += angularImpulseB;
+		}
 
 	}
 	else
@@ -184,6 +224,8 @@ void PhysicsMaster::ProcessContact(CollisionData* contact)
 	TransformComponent* transformB = (TransformComponent*)contact->colliderB->baseObject->GetComponent("Transform");
 
 	float E = (colliderA->elasticity + colliderB->elasticity) / 2.0f;	//sprê¿ystoœæ
+	//glm::vec3 collisionPoint = contact->globalPositionA;
+	//glm::vec3 collisionPoint = (transformA->LocalToGlobalSpace(contact->localPositionA) + transformB->LocalToGlobalSpace(contact->localPositionB)) / 2.0f;
 	glm::vec3 collisionPoint = transformA->LocalToGlobalSpace(contact->localPositionA);
 	glm::vec3 n = contact->normal;
 
@@ -200,6 +242,9 @@ void PhysicsMaster::ProcessContact(CollisionData* contact)
 		pB = rigidbodyB->velocity + glm::cross(rigidbodyB->angularVelocity, rB);
 	else
 		pB = glm::vec3(0);
+
+	//if (glm::dot(n, pA - pB) >= 0)
+	//	return;
 
 	float inverseMassA;
 	glm::mat3 inverseInteriaA;
@@ -227,28 +272,32 @@ void PhysicsMaster::ProcessContact(CollisionData* contact)
 		inverseMassB = 0;
 	}
 
-	float vRel = glm::dot(n, pA - pB) - contact->actualPenetration * 0.2/dT;
+	float vRel = glm::dot(n, pA - pB) - contact->actualPenetration * SEPARATION_VALUE / dT;
+
+	if (vRel > 0)
+		return;
+
 	//float vRel = glm::dot(n, pA - pB);
 
 	float j = -(1.0 + E) * vRel;
 	j /= inverseMassA + inverseMassB + glm::dot(n, glm::cross(inverseInteriaA * glm::cross(rA, n), rA)) + glm::dot(n, glm::cross(inverseInteriaB * glm::cross(rB, n), rB));
 	glm::vec3 J = j * n;
 
-	float f = 0.55f;
+	float f = 0.25f;
 
 	glm::vec3 t1 = contact->tangentA;
 	glm::vec3 t2 = contact->tangentB;
 
-	float mT1 = -(1.0 + E) * glm::dot(t1, pA - pB);
+	/*float mT1 = -(1.0 + E) * glm::dot(t1, pA - pB);
 	mT1 /= inverseMassA + inverseMassB + glm::dot(t1, glm::cross(inverseInteriaA * glm::cross(rA, t1), rA)) + glm::dot(t1, glm::cross(inverseInteriaB * glm::cross(rB, t1), rB));
 	glm::vec3 T1 = mT1 * t1;
 
 	float mT2 = -(1.0 + E) * glm::dot(t2, pA - pB);
 	mT2 /= inverseMassA + inverseMassB + glm::dot(t2, glm::cross(inverseInteriaA * glm::cross(rA, t2), rA)) + glm::dot(t2, glm::cross(inverseInteriaB * glm::cross(rB, t2), rB));
-	glm::vec3 T2 = mT2 * t2;
+	glm::vec3 T2 = mT2 * t2;*/
 
 	glm::vec3 T;
-	glm::vec3 t = pA - pB - glm::dot(n, pA - pB);
+	glm::vec3 t = pA - pB - n * glm::dot(n, pA - pB);
 	if (t != glm::vec3(0))
 	{
 		t = glm::normalize(t);
@@ -256,20 +305,21 @@ void PhysicsMaster::ProcessContact(CollisionData* contact)
 		mT /= inverseMassA + inverseMassB + glm::dot(t, glm::cross(inverseInteriaA * glm::cross(rA, t), rA)) + glm::dot(t, glm::cross(inverseInteriaB * glm::cross(rB, t), rB));
 		T = mT * t;
 
-		J += T * f;
-	} 
+		//J += T * f;
+	}
 	//J += f * (T1 + T2);
-	J /= (float)(contacts.size() + 1);	//cause there are many contacts
+	//J /= (float)(contacts.size() + 1);	//because there are many contacts (+1 as there is one additoinal "average" contact)
+	J /= (float)(contacts.size());
 
 	glm::vec3 dVA = J * inverseMassA;	//delta velocity A
 	glm::vec3 dVB = J * inverseMassB;	//delta velocity B
-	float mdVA = glm::length(dVA);		//magnitude of dVA
-	float mdVB = glm::length(dVB);
+	//float mdVA = glm::length(dVA);		//magnitude of dVA
+	//float mdVB = glm::length(dVB);
 
 	if (rigidbodyA != NULL)
 	{
-		linearImpulse += dVA;
-		angularImpulse += inverseInteriaA * glm::cross(rA, J);
+		linearImpulseA += dVA;
+		angularImpulseA += inverseInteriaA * glm::cross(rA, J);
 		//rigidbodyA->velocity += dVA;
 
 		//rigidbodyA->angularVelocity += inverseInteriaA * glm::cross(rA, J);
@@ -280,18 +330,21 @@ void PhysicsMaster::ProcessContact(CollisionData* contact)
 
 	if (rigidbodyB != NULL)
 	{
-	 	rigidbodyB->velocity += -dVB;
-
-		rigidbodyB->angularVelocity += -inverseInteriaB * glm::cross(rB, J);
-		rigidbodyB->angularVelocity *= 0.9f;	//hack
-
-		//transformB->position += -mdVB / (mdVA + mdVB) * n * contact->penetration/* / (float)contacts.size()*/;
+		linearImpulseB += -dVB;
+		angularImpulseB += inverseInteriaB * glm::cross(rB, -J);
 	}
 }
 
-void PhysicsMaster::RecalculateActualPenetration(CollisionData * contact)
+void PhysicsMaster::RecalculateActualPenetration(CollisionData* contact)
 {
-	contact->actualPenetration = contact->penetration + glm::dot(contact->normal, contact->globalPositionA - ((TransformComponent*)contact->colliderA->baseObject->GetComponent("Transform"))->LocalToGlobalSpace(contact->localPositionA));
+	//contact->actualPenetration = contact->penetration + glm::dot(contact->normal, contact->globalPositionA - ((TransformComponent*)contact->colliderA->baseObject->GetComponent("Transform"))->LocalToGlobalSpace(contact->localPositionA)) + glm::dot(-contact->normal, contact->globalPositionA - ((TransformComponent*)contact->colliderB->baseObject->GetComponent("Transform"))->LocalToGlobalSpace(contact->localPositionB));
+	//contact->actualPenetration = glm::dot(-contact->normal, ((TransformComponent*)contact->colliderA->baseObject->GetComponent("Transform"))->LocalToGlobalSpace(contact->localPositionA) - ((TransformComponent*)contact->colliderB->baseObject->GetComponent("Transform"))->LocalToGlobalSpace(contact->localPositionB));
+
+	glm::vec3 localToGlobalA = ((TransformComponent*)contact->colliderA->baseObject->GetComponent("Transform"))->LocalToGlobalSpace(contact->localPositionA);
+	glm::vec3 localToGlobalB = ((TransformComponent*)contact->colliderB->baseObject->GetComponent("Transform"))->LocalToGlobalSpace(contact->localPositionB);
+	glm::vec3 rAB = localToGlobalA - localToGlobalB;
+
+	contact->actualPenetration = glm::dot(contact->normal, rAB);
 }
 
 bool PhysicsMaster::ContactValid(CollisionData* contact)
@@ -305,8 +358,9 @@ bool PhysicsMaster::ContactValid(CollisionData* contact)
 	float mrA = glm::length(rA);
 	float mrB = glm::length(rB);
 	float penetrating = glm::dot(contact->normal, rAB);
+	//float penetrating = 0;
 
-	if (mrA < PERSISTENT_THREASHOLD && mrB < PERSISTENT_THREASHOLD && penetrating < 0.001f)
+	if (mrA < PERSISTENT_THREASHOLD && mrB < PERSISTENT_THREASHOLD && penetrating > -0.01f)
 		return true;
 	else
 		return false;
@@ -314,28 +368,57 @@ bool PhysicsMaster::ContactValid(CollisionData* contact)
 
 bool PhysicsMaster::ContactInsideContactFace(int index)
 {
-	bool outside = true;
-	glm::vec3* vectors = new glm::vec3[contacts.size()];
+	return false;
+}
 
+bool PhysicsMaster::ContactOnLine(CollisionData* contact, CollisionData* contactA, CollisionData* contactB)
+{
+	glm::vec3 ab = contactB->localPositionA - contactA->localPositionA;
+	glm::vec3 pb = contactB->localPositionA - contact->localPositionA;
+	glm::vec3 pa = contactA->localPositionA - contact->localPositionA;
+	//if(glm::cross(pb, ab) != glm::vec3(0))
+	if(!AlmostEqual(glm::cross(pb, ab), glm::vec3(0), 0.1))
+		return false;
+
+	if (glm::dot(pa, ab) > 0)
+		return false;
+
+	if (glm::dot(pb, -ab) > 0)
+		return false;
+
+	return true;
+}
+
+bool PhysicsMaster::ContactInsideContactFace(CollisionData* contact)
+{
+	if(contacts.size() <= 2)
+		return false;
+
+	bool outside = true;
+	float minDot = INFINITY;
+
+	std::vector<glm::vec3> vectors;
+	vectors.reserve(contacts.size());
 
 	for (int i = 0; i < contacts.size(); ++i)
 	{
-		if (index == i)
-			continue;
-		vectors[i] = contacts[i].localPositionA - contacts[index].localPositionA;
+		if (contact == &contacts[i])
+			vectors.push_back(glm::vec3(0));
+		else
+			vectors.push_back(contacts[i].localPositionA - contact->localPositionA);
 	}
 
 	for (int i = 0; i < contacts.size(); ++i)
 	{
 		outside = true;
-		if (i == index)
+		if (contact == &contacts[i])
 			continue;
 
 		glm::vec3 v1 = glm::vec3(0);
 
 		for (int j = 0; j < contacts.size(); ++j)
 		{
-			if (j == i || j == index)
+			if (i == j || contact == &contacts[j])
 				continue;
 
 			if (v1 == glm::vec3(0))
@@ -346,6 +429,15 @@ bool PhysicsMaster::ContactInsideContactFace(int index)
 
 			glm::vec3 v2 = glm::cross(vectors[i], vectors[j]);
 
+			minDot = std::min(minDot, glm::dot(v1, v2));
+
+			//if (v2 == glm::vec3(0))
+			//if (AlmostEqual(v2, glm::vec3(0), 0.05))
+			//{
+				if (ContactOnLine(contact, &contacts[i], &contacts[j]))
+					return true;
+			//}
+
 			if (glm::dot(v1, v2) < 0)
 			{
 				outside = false;
@@ -355,27 +447,121 @@ bool PhysicsMaster::ContactInsideContactFace(int index)
 
 		if (outside)
 		{
-			delete[] vectors;
 			return false;
 		}
 	}
 
-
-	delete[] vectors;
 	return true;
 }
 
-bool PhysicsMaster::ContactFarEnough(CollisionData *newContact)
+bool PhysicsMaster::ContactsFarEnough(CollisionData* newContact, CollisionData* oldContact)
 {
-	for (CollisionData& contact : contacts)
-	{
-		glm::vec3 rA = newContact->globalPositionA - contact.globalPositionA;
-		glm::vec3 rB = newContact->globalPositionB - contact.globalPositionB;
+	glm::vec3 rA = newContact->localPositionA - oldContact->localPositionA;
 
-		if (glm::length(rA) < PERSISTENT_THREASHOLD || glm::length(rB) < PERSISTENT_THREASHOLD)
-			return false;
-	}
+	if (glm::length(rA) < PERSISTENT_THREASHOLD)
+		return false;
 	return true;
+	/*glm::vec3 rA = newContact->globalPositionA - oldContact->globalPositionA;
+	glm::vec3 rB = newContact->globalPositionB - oldContact->globalPositionB;
+
+	if (glm::length(rA) < PERSISTENT_THREASHOLD || glm::length(rB) < PERSISTENT_THREASHOLD)
+		return false;
+	return true;*/
+}
+
+void PhysicsMaster::DeleteContactsInsideManifold()
+{
+}
+
+void PhysicsMaster::AddContactToManifold(CollisionData* contact)
+{
+	if (contacts.size() <= 1)	//0 or 1 - simply add
+	{
+		contacts.push_back(*contact);
+	}
+	else if (contacts.size() == 2)
+	{
+		if (!ContactOnLine(contact, &contacts[0], &contacts[1]))
+		{
+			contacts.push_back(*contact);
+
+			if (!ContactsFarEnough(contact, &contacts[1]))
+			{
+				contacts.erase(contacts.begin() + 1); return;
+			}
+
+			if (!ContactsFarEnough(contact, &contacts[0]))
+			{
+				contacts.erase(contacts.begin() + 0); return;
+			}
+
+			if (ContactOnLine(&contacts[1], &contacts[0], contact))
+			{
+				contacts.erase(contacts.begin() + 1); return;
+			}
+
+			if (ContactOnLine(&contacts[0], &contacts[1], contact))
+			{
+				contacts.erase(contacts.begin() + 0); return;
+			}
+		}
+	}
+	else if (contacts.size() >= 3)
+	{
+		if (!ContactInsideContactFace(contact))
+		{
+			for (int i = 0; i < contacts.size(); i++)	//delete contact that are too close
+			{
+				if (!ContactsFarEnough(contact, &contacts[i]))
+				{
+					contacts.erase(contacts.begin() + i); i--;
+				}
+			}
+			contacts.push_back(*contact);	//add our new contact
+
+			for (int i = 0; i < contacts.size() - 1; ++i)	//delete contacts that are now not on the outline (-1 bc our last contact if surely ok)
+			{
+				if (ContactInsideContactFace(&contacts[i]))
+				{
+					contacts.erase(contacts.begin() + i); i--;
+				}
+			}
+		}
+	}
+}
+
+std::vector<CollisionData*> PhysicsMaster::QuickHull()
+{
+	std::vector<CollisionData*> hull;
+	glm::vec3 D = contacts[0].localPositionA - contacts[1].localPositionA;
+	hull.push_back(FurthestContactInDirection(D));
+	hull.push_back(FurthestContactInDirection(-D));
+
+	std::vector<CollisionData*> pointsR, pointsL;
+
+	return std::vector<CollisionData*>();
+}
+
+void PhysicsMaster::DoHull(CollisionData * A, CollisionData * B, std::vector<CollisionData*> &points, std::vector<CollisionData*>& hull)
+{
+	//mabe later.... :c
+}
+
+CollisionData* PhysicsMaster::FurthestContactInDirection(glm::vec3 D)	//in local space
+{
+	CollisionData* furthest = &contacts[0];
+	float furthestDistance = glm::dot(D, furthest->localPositionA);
+
+	for (int i = 1; i < contacts.size(); ++i)
+	{
+		float distance = glm::dot(D, contacts[i].localPositionA);
+		if (distance > furthestDistance)
+		{
+			furthestDistance = distance;
+			furthest = &contacts[i];
+		}
+	}
+	return furthest;
 }
 
 bool PhysicsMaster::GetObjectsCollisionData(ColliderComponent* colliderA, ColliderComponent* colliderB, CollisionData& collisionData)
@@ -569,9 +755,11 @@ CollisionData PhysicsMaster::BuildPolytope(Simplex base, ColliderComponent* coll
 				faces[closestFaceIndex].supports[1].supportA * barycentricV +
 				faces[closestFaceIndex].supports[2].supportA * barycentricW;
 
-			glm::vec3 collisionPointB = faces[closestFaceIndex].supports[0].supportB * barycentricU +
+			/*glm::vec3 collisionPointB = faces[closestFaceIndex].supports[0].supportB * barycentricU +
 				faces[closestFaceIndex].supports[1].supportB * barycentricV +
-				faces[closestFaceIndex].supports[2].supportB * barycentricW;
+				faces[closestFaceIndex].supports[2].supportB * barycentricW;*/
+
+			glm::vec3 collisionPointB = collisionPointA;	//idgaf
 
 			glm::vec3 n = glm::normalize(-faces[closestFaceIndex].normal);	//normalize because of some absud inaccuracy
 
